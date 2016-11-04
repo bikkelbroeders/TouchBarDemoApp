@@ -29,6 +29,8 @@ For sideloading the app, see [these instructions](http://bouk.co/blog/sideload-i
 
 * Thanks to [Aleksei Mazelyuk](https://dribbble.com/mazelyuk) for his [Touch bar for VK Messenger](https://dribbble.com/shots/3057522-Touch-bar-for-VK-Messenger), which was an inspiration for the app icon.
 
+* Thanks to [Rasmus](https://rsms.me/) for [peertalk](https://github.com/rsms/peertalk), which is used to communicate between the macOS and iOS apps through USB connection.
+
 ## License
 
 Touch Bar Demo App is published under the [MIT License](http://www.opensource.org/licenses/mit-license.php).
