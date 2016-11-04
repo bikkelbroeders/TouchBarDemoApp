@@ -31,7 +31,7 @@ For sideloading the app, see [these instructions](http://bouk.co/blog/sideload-i
 
 * Thanks to [Rasmus Andersson](https://rsms.me/) for [peertalk](https://github.com/rsms/peertalk), which is used to communicate between the macOS and iOS apps through USB connection.
 
-Thanks to [Bas van der Ploeg](http://basvanderploeg.nl) for testing and shooting a sample video.
+* Thanks to [Bas van der Ploeg](http://basvanderploeg.nl) for testing and shooting a sample video.
 
 ## License
 
