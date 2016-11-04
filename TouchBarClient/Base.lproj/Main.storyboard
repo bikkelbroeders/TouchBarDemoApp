@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="640" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fdf-kx-9oY">
+                                <rect key="frame" x="0.0" y="446.5" width="640" height="33.5"/>
+                                <subviews>
+                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PzG-Nm-vW5">
+                                        <rect key="frame" x="8" y="8" width="624" height="17.5"/>
+                                        <gestureRecognizers/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="PzG-Nm-vW5" secondAttribute="height" multiplier="217:6" id="G43-qT-eah"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="PzG-Nm-vW5" firstAttribute="top" secondItem="fdf-kx-9oY" secondAttribute="top" constant="8" id="UxL-05-P8S"/>
+                                    <constraint firstAttribute="trailing" secondItem="PzG-Nm-vW5" secondAttribute="trailing" constant="8" id="Wny-AU-VQX"/>
+                                    <constraint firstItem="PzG-Nm-vW5" firstAttribute="leading" secondItem="fdf-kx-9oY" secondAttribute="leading" constant="8" id="ieE-Ox-AfY"/>
+                                    <constraint firstAttribute="bottom" secondItem="PzG-Nm-vW5" secondAttribute="bottom" constant="8" id="z7N-CW-Ljc"/>
+                                </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="uS1-Td-w9y" appends="YES" id="8HS-dQ-XAc"/>
+                                </connections>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please connect this device to your Mac and start TouchBarServer..." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GaH-hF-CS5">
+                                <rect key="frame" x="64" y="230" width="512" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.094117647058823528" green="0.094117647058823528" blue="0.094117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="fdf-kx-9oY" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Bct-lL-HwQ"/>
+                            <constraint firstItem="GaH-hF-CS5" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="XD2-vB-7XE"/>
+                            <constraint firstAttribute="trailing" secondItem="fdf-kx-9oY" secondAttribute="trailing" id="Zid-It-lPa"/>
+                            <constraint firstItem="GaH-hF-CS5" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="aA8-0W-qAH"/>
+                            <constraint firstItem="GaH-hF-CS5" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" multiplier="0.8" id="esl-rw-6Kg"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="fdf-kx-9oY" secondAttribute="bottom" id="iYy-Nh-jI3"/>
+                        </constraints>
+                    </view>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="640" height="480"/>
+                    <connections>
+                        <outlet property="aspectRatioConstraint" destination="G43-qT-eah" id="IuP-3u-c5X"/>
+                        <outlet property="backgroundView" destination="fdf-kx-9oY" id="Roh-4B-JBi"/>
+                        <outlet property="bottomConstraint" destination="iYy-Nh-jI3" id="Nrm-Ej-HTK"/>
+                        <outlet property="imageView" destination="PzG-Nm-vW5" id="Zq9-mv-48V"/>
+                        <outlet property="instructionLabel" destination="GaH-hF-CS5" id="j2Q-Vj-AfZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="999999" minimumPressDuration="0.0" id="uS1-Td-w9y">
+                    <connections>
+                        <action selector="recognizerFired:" destination="BYZ-38-t0r" id="MpD-zE-RWN"/>
+                    </connections>
+                </pongPressGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="139.19999999999999" y="136.73163418290855"/>
+        </scene>
+    </scenes>
+</document>

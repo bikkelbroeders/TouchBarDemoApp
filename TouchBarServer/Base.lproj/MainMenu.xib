@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2657" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
+            <connections>
+                <outlet property="delegate" destination="Voe-Tx-rLC" id="GzC-gU-4Uq"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
+            <connections>
+                <outlet property="menu" destination="g4U-gg-VOe" id="liK-bP-HxT"/>
+                <outlet property="remoteBarMenuItem" destination="1Ld-hb-tYP" id="Qdm-Ap-WBd"/>
+                <outlet property="screenBarMenuItem" destination="Ezt-RS-Smo" id="EcL-HZ-rfq"/>
+            </connections>
+        </customObject>
+        <customObject id="7Lb-xD-dZU" userLabel="StartAtLoginController" customClass="StartAtLoginController">
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="string" keyPath="identifier" value="com.bikkelbroeders.TouchBarServer-Helper"/>
+            </userDefinedRuntimeAttributes>
+        </customObject>
+        <menu id="g4U-gg-VOe">
+            <items>
+                <menuItem title="On-Screen Touch Bar (Press Fn to Show)" state="on" id="Ezt-RS-Smo">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="Allow iOS Touch Bar Clients" state="on" id="1Ld-hb-tYP">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="Drp-cd-3aF"/>
+                <menuItem title="Start at Login" id="Wo5-Jg-YiO">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <binding destination="7Lb-xD-dZU" name="value" keyPath="startAtLogin" id="ZL1-9x-8Rz"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="yfG-Ik-gWj"/>
+                <menuItem title="Quit" id="MvZ-ae-Tls">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="terminate:" target="-2" id="bPW-zf-jL8"/>
+                    </connections>
+                </menuItem>
+            </items>
+        </menu>
+    </objects>
+</document>

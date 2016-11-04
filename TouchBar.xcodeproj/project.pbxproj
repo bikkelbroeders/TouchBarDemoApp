@@ -1,0 +1,680 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5E19C5101DCB947B00DA3CB1 /* StartAtLoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E19C50F1DCB947B00DA3CB1 /* StartAtLoginController.m */; };
+		5E19C5191DCB94BF00DA3CB1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E19C5181DCB94BF00DA3CB1 /* AppDelegate.m */; };
+		5E19C51C1DCB94BF00DA3CB1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E19C51B1DCB94BF00DA3CB1 /* main.m */; };
+		5E6AA4621DCAA65B00B804EC /* DFRFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E6AA4601DCAA65B00B804EC /* DFRFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		5E6AA4631DCAA65B00B804EC /* SkyLight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E6AA4611DCAA65B00B804EC /* SkyLight.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		5EAC86FC1DCA8B83001BB8AC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC86FB1DCA8B83001BB8AC /* main.m */; };
+		5EAC86FF1DCA8B83001BB8AC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC86FE1DCA8B83001BB8AC /* AppDelegate.m */; };
+		5EAC87021DCA8B83001BB8AC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC87011DCA8B83001BB8AC /* ViewController.m */; };
+		5EAC87051DCA8B83001BB8AC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5EAC87031DCA8B83001BB8AC /* Main.storyboard */; };
+		5EAC87071DCA8B83001BB8AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EAC87061DCA8B83001BB8AC /* Assets.xcassets */; };
+		5EAC870A1DCA8B83001BB8AC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5EAC87081DCA8B83001BB8AC /* LaunchScreen.storyboard */; };
+		5EAC87191DCA8BAC001BB8AC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC87181DCA8BAC001BB8AC /* AppDelegate.m */; };
+		5EAC871C1DCA8BAC001BB8AC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC871B1DCA8BAC001BB8AC /* main.m */; };
+		5EAC871E1DCA8BAD001BB8AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EAC871D1DCA8BAD001BB8AC /* Assets.xcassets */; };
+		5EAC87211DCA8BAD001BB8AC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5EAC871F1DCA8BAD001BB8AC /* MainMenu.xib */; };
+		5EC478651DCBD51200C06ED1 /* TouchBarServer Helper.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5E19C5151DCB94BF00DA3CB1 /* TouchBarServer Helper.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5EF078601DCA8CC400BD69DA /* PTChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF078581DCA8CC400BD69DA /* PTChannel.m */; };
+		5EF078611DCA8CC400BD69DA /* PTChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF078581DCA8CC400BD69DA /* PTChannel.m */; };
+		5EF078621DCA8CC400BD69DA /* PTProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF0785B1DCA8CC400BD69DA /* PTProtocol.m */; };
+		5EF078631DCA8CC400BD69DA /* PTProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF0785B1DCA8CC400BD69DA /* PTProtocol.m */; };
+		5EF078641DCA8CC400BD69DA /* PTUSBHub.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF0785D1DCA8CC400BD69DA /* PTUSBHub.m */; };
+		5EF078651DCA8CC400BD69DA /* PTUSBHub.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF0785D1DCA8CC400BD69DA /* PTUSBHub.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5EB699D11DCBCF1B00BB644B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5EAC86EF1DCA8B83001BB8AC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5E19C5141DCB94BF00DA3CB1;
+			remoteInfo = "TouchBarServer Helper";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5EC478641DCBD50100C06ED1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LoginItems;
+			dstSubfolderSpec = 1;
+			files = (
+				5EC478651DCBD51200C06ED1 /* TouchBarServer Helper.app in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		5E19C50E1DCB947B00DA3CB1 /* StartAtLoginController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartAtLoginController.h; sourceTree = "<group>"; };
+		5E19C50F1DCB947B00DA3CB1 /* StartAtLoginController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartAtLoginController.m; sourceTree = "<group>"; };
+		5E19C5151DCB94BF00DA3CB1 /* TouchBarServer Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TouchBarServer Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5E19C5171DCB94BF00DA3CB1 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		5E19C5181DCB94BF00DA3CB1 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		5E19C51B1DCB94BF00DA3CB1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		5E19C5221DCB94BF00DA3CB1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5E6AA4601DCAA65B00B804EC /* DFRFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DFRFoundation.framework; path = ../../../../System/Library/PrivateFrameworks/DFRFoundation.framework; sourceTree = "<group>"; };
+		5E6AA4611DCAA65B00B804EC /* SkyLight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SkyLight.framework; path = ../../../../System/Library/PrivateFrameworks/SkyLight.framework; sourceTree = "<group>"; };
+		5E7EB02A1DCA91AD00C2B09A /* Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Protocol.h; sourceTree = "<group>"; };
+		5EAC86F71DCA8B83001BB8AC /* TouchBarClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TouchBarClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5EAC86FB1DCA8B83001BB8AC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		5EAC86FD1DCA8B83001BB8AC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		5EAC86FE1DCA8B83001BB8AC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		5EAC87001DCA8B83001BB8AC /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		5EAC87011DCA8B83001BB8AC /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		5EAC87041DCA8B83001BB8AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		5EAC87061DCA8B83001BB8AC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5EAC87091DCA8B83001BB8AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		5EAC870B1DCA8B83001BB8AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5EAC87151DCA8BAC001BB8AC /* TouchBarServer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TouchBarServer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5EAC87171DCA8BAC001BB8AC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		5EAC87181DCA8BAC001BB8AC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		5EAC871B1DCA8BAC001BB8AC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		5EAC871D1DCA8BAD001BB8AC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5EAC87201DCA8BAD001BB8AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		5EAC87221DCA8BAD001BB8AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5EF078551DCA8CC400BD69DA /* Peertalk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peertalk.h; sourceTree = "<group>"; };
+		5EF078561DCA8CC400BD69DA /* prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = "<group>"; };
+		5EF078571DCA8CC400BD69DA /* PTChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTChannel.h; sourceTree = "<group>"; };
+		5EF078581DCA8CC400BD69DA /* PTChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTChannel.m; sourceTree = "<group>"; };
+		5EF078591DCA8CC400BD69DA /* PTPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPrivate.h; sourceTree = "<group>"; };
+		5EF0785A1DCA8CC400BD69DA /* PTProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTProtocol.h; sourceTree = "<group>"; };
+		5EF0785B1DCA8CC400BD69DA /* PTProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTProtocol.m; sourceTree = "<group>"; };
+		5EF0785C1DCA8CC400BD69DA /* PTUSBHub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUSBHub.h; sourceTree = "<group>"; };
+		5EF0785D1DCA8CC400BD69DA /* PTUSBHub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUSBHub.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5E19C5121DCB94BF00DA3CB1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5EAC86F41DCA8B83001BB8AC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5EAC87121DCA8BAC001BB8AC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5E6AA4621DCAA65B00B804EC /* DFRFoundation.framework in Frameworks */,
+				5E6AA4631DCAA65B00B804EC /* SkyLight.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5E19C5161DCB94BF00DA3CB1 /* TouchBarServer Helper */ = {
+			isa = PBXGroup;
+			children = (
+				5E19C5171DCB94BF00DA3CB1 /* AppDelegate.h */,
+				5E19C5181DCB94BF00DA3CB1 /* AppDelegate.m */,
+				5E19C5221DCB94BF00DA3CB1 /* Info.plist */,
+				5E19C51A1DCB94BF00DA3CB1 /* Supporting Files */,
+			);
+			path = "TouchBarServer Helper";
+			sourceTree = "<group>";
+		};
+		5E19C51A1DCB94BF00DA3CB1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5E19C51B1DCB94BF00DA3CB1 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5E6AA45F1DCAA65B00B804EC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5E6AA4601DCAA65B00B804EC /* DFRFoundation.framework */,
+				5E6AA4611DCAA65B00B804EC /* SkyLight.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5EAC86EE1DCA8B83001BB8AC = {
+			isa = PBXGroup;
+			children = (
+				5EF078521DCA8CC400BD69DA /* Shared */,
+				5EAC86F91DCA8B83001BB8AC /* TouchBarClient */,
+				5EAC87161DCA8BAC001BB8AC /* TouchBarServer */,
+				5E19C5161DCB94BF00DA3CB1 /* TouchBarServer Helper */,
+				5EAC86F81DCA8B83001BB8AC /* Products */,
+				5E6AA45F1DCAA65B00B804EC /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		5EAC86F81DCA8B83001BB8AC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5EAC86F71DCA8B83001BB8AC /* TouchBarClient.app */,
+				5EAC87151DCA8BAC001BB8AC /* TouchBarServer.app */,
+				5E19C5151DCB94BF00DA3CB1 /* TouchBarServer Helper.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5EAC86F91DCA8B83001BB8AC /* TouchBarClient */ = {
+			isa = PBXGroup;
+			children = (
+				5EAC86FD1DCA8B83001BB8AC /* AppDelegate.h */,
+				5EAC86FE1DCA8B83001BB8AC /* AppDelegate.m */,
+				5EAC87001DCA8B83001BB8AC /* ViewController.h */,
+				5EAC87011DCA8B83001BB8AC /* ViewController.m */,
+				5EAC87031DCA8B83001BB8AC /* Main.storyboard */,
+				5EAC87061DCA8B83001BB8AC /* Assets.xcassets */,
+				5EAC87081DCA8B83001BB8AC /* LaunchScreen.storyboard */,
+				5EAC870B1DCA8B83001BB8AC /* Info.plist */,
+				5EAC86FA1DCA8B83001BB8AC /* Supporting Files */,
+			);
+			path = TouchBarClient;
+			sourceTree = "<group>";
+		};
+		5EAC86FA1DCA8B83001BB8AC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5EAC86FB1DCA8B83001BB8AC /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5EAC87161DCA8BAC001BB8AC /* TouchBarServer */ = {
+			isa = PBXGroup;
+			children = (
+				5EAC87171DCA8BAC001BB8AC /* AppDelegate.h */,
+				5EAC87181DCA8BAC001BB8AC /* AppDelegate.m */,
+				5E19C50E1DCB947B00DA3CB1 /* StartAtLoginController.h */,
+				5E19C50F1DCB947B00DA3CB1 /* StartAtLoginController.m */,
+				5EAC871D1DCA8BAD001BB8AC /* Assets.xcassets */,
+				5EAC871F1DCA8BAD001BB8AC /* MainMenu.xib */,
+				5EAC87221DCA8BAD001BB8AC /* Info.plist */,
+				5EAC871A1DCA8BAC001BB8AC /* Supporting Files */,
+			);
+			path = TouchBarServer;
+			sourceTree = "<group>";
+		};
+		5EAC871A1DCA8BAC001BB8AC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5EAC871B1DCA8BAC001BB8AC /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5EF078521DCA8CC400BD69DA /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				5EF078531DCA8CC400BD69DA /* Peertalk */,
+				5E7EB02A1DCA91AD00C2B09A /* Protocol.h */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		5EF078531DCA8CC400BD69DA /* Peertalk */ = {
+			isa = PBXGroup;
+			children = (
+				5EF078551DCA8CC400BD69DA /* Peertalk.h */,
+				5EF078561DCA8CC400BD69DA /* prefix.pch */,
+				5EF078571DCA8CC400BD69DA /* PTChannel.h */,
+				5EF078581DCA8CC400BD69DA /* PTChannel.m */,
+				5EF078591DCA8CC400BD69DA /* PTPrivate.h */,
+				5EF0785A1DCA8CC400BD69DA /* PTProtocol.h */,
+				5EF0785B1DCA8CC400BD69DA /* PTProtocol.m */,
+				5EF0785C1DCA8CC400BD69DA /* PTUSBHub.h */,
+				5EF0785D1DCA8CC400BD69DA /* PTUSBHub.m */,
+			);
+			path = Peertalk;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5E19C5141DCB94BF00DA3CB1 /* TouchBarServer Helper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5E19C5231DCB94BF00DA3CB1 /* Build configuration list for PBXNativeTarget "TouchBarServer Helper" */;
+			buildPhases = (
+				5E19C5111DCB94BF00DA3CB1 /* Sources */,
+				5E19C5121DCB94BF00DA3CB1 /* Frameworks */,
+				5E19C5131DCB94BF00DA3CB1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "TouchBarServer Helper";
+			productName = "TouchBarServer Helper";
+			productReference = 5E19C5151DCB94BF00DA3CB1 /* TouchBarServer Helper.app */;
+			productType = "com.apple.product-type.application";
+		};
+		5EAC86F61DCA8B83001BB8AC /* TouchBarClient */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5EAC870E1DCA8B83001BB8AC /* Build configuration list for PBXNativeTarget "TouchBarClient" */;
+			buildPhases = (
+				5EAC86F31DCA8B83001BB8AC /* Sources */,
+				5EAC86F41DCA8B83001BB8AC /* Frameworks */,
+				5EAC86F51DCA8B83001BB8AC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TouchBarClient;
+			productName = TouchBarClient;
+			productReference = 5EAC86F71DCA8B83001BB8AC /* TouchBarClient.app */;
+			productType = "com.apple.product-type.application";
+		};
+		5EAC87141DCA8BAC001BB8AC /* TouchBarServer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5EAC87231DCA8BAD001BB8AC /* Build configuration list for PBXNativeTarget "TouchBarServer" */;
+			buildPhases = (
+				5EAC87111DCA8BAC001BB8AC /* Sources */,
+				5EAC87121DCA8BAC001BB8AC /* Frameworks */,
+				5EAC87131DCA8BAC001BB8AC /* Resources */,
+				5EC478641DCBD50100C06ED1 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5EB699D21DCBCF1B00BB644B /* PBXTargetDependency */,
+			);
+			name = TouchBarServer;
+			productName = TouchBarServer;
+			productReference = 5EAC87151DCA8BAC001BB8AC /* TouchBarServer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5EAC86EF1DCA8B83001BB8AC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0810;
+				ORGANIZATIONNAME = Bikkelbroeders;
+				TargetAttributes = {
+					5E19C5141DCB94BF00DA3CB1 = {
+						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = L7942L77ZU;
+						ProvisioningStyle = Automatic;
+					};
+					5EAC86F61DCA8B83001BB8AC = {
+						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = L7942L77ZU;
+						ProvisioningStyle = Automatic;
+					};
+					5EAC87141DCA8BAC001BB8AC = {
+						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = L7942L77ZU;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 5EAC86F21DCA8B83001BB8AC /* Build configuration list for PBXProject "TouchBar" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5EAC86EE1DCA8B83001BB8AC;
+			productRefGroup = 5EAC86F81DCA8B83001BB8AC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5EAC86F61DCA8B83001BB8AC /* TouchBarClient */,
+				5EAC87141DCA8BAC001BB8AC /* TouchBarServer */,
+				5E19C5141DCB94BF00DA3CB1 /* TouchBarServer Helper */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5E19C5131DCB94BF00DA3CB1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5EAC86F51DCA8B83001BB8AC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5EAC870A1DCA8B83001BB8AC /* LaunchScreen.storyboard in Resources */,
+				5EAC87071DCA8B83001BB8AC /* Assets.xcassets in Resources */,
+				5EAC87051DCA8B83001BB8AC /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5EAC87131DCA8BAC001BB8AC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5EAC871E1DCA8BAD001BB8AC /* Assets.xcassets in Resources */,
+				5EAC87211DCA8BAD001BB8AC /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5E19C5111DCB94BF00DA3CB1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5E19C51C1DCB94BF00DA3CB1 /* main.m in Sources */,
+				5E19C5191DCB94BF00DA3CB1 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5EAC86F31DCA8B83001BB8AC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5EAC87021DCA8B83001BB8AC /* ViewController.m in Sources */,
+				5EAC86FF1DCA8B83001BB8AC /* AppDelegate.m in Sources */,
+				5EAC86FC1DCA8B83001BB8AC /* main.m in Sources */,
+				5EF078601DCA8CC400BD69DA /* PTChannel.m in Sources */,
+				5EF078641DCA8CC400BD69DA /* PTUSBHub.m in Sources */,
+				5EF078621DCA8CC400BD69DA /* PTProtocol.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5EAC87111DCA8BAC001BB8AC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5EAC871C1DCA8BAC001BB8AC /* main.m in Sources */,
+				5EF078631DCA8CC400BD69DA /* PTProtocol.m in Sources */,
+				5EF078611DCA8CC400BD69DA /* PTChannel.m in Sources */,
+				5EF078651DCA8CC400BD69DA /* PTUSBHub.m in Sources */,
+				5EAC87191DCA8BAC001BB8AC /* AppDelegate.m in Sources */,
+				5E19C5101DCB947B00DA3CB1 /* StartAtLoginController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5EB699D21DCBCF1B00BB644B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5E19C5141DCB94BF00DA3CB1 /* TouchBarServer Helper */;
+			targetProxy = 5EB699D11DCBCF1B00BB644B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		5EAC87031DCA8B83001BB8AC /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5EAC87041DCA8B83001BB8AC /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		5EAC87081DCA8B83001BB8AC /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5EAC87091DCA8B83001BB8AC /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		5EAC871F1DCA8BAD001BB8AC /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5EAC87201DCA8BAD001BB8AC /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		5E19C5241DCB94BF00DA3CB1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = L7942L77ZU;
+				INFOPLIST_FILE = "TouchBarServer Helper/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bikkelbroeders.TouchBarServer-Helper";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5E19C5251DCB94BF00DA3CB1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = L7942L77ZU;
+				INFOPLIST_FILE = "TouchBarServer Helper/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bikkelbroeders.TouchBarServer-Helper";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5EAC870C1DCA8B83001BB8AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5EAC870D1DCA8B83001BB8AC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5EAC870F1DCA8B83001BB8AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = L7942L77ZU;
+				INFOPLIST_FILE = TouchBarClient/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.bikkelbroeders.TouchBarClient;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		5EAC87101DCA8B83001BB8AC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = L7942L77ZU;
+				INFOPLIST_FILE = TouchBarClient/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.bikkelbroeders.TouchBarClient;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		5EAC87241DCA8BAD001BB8AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = L7942L77ZU;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
+				);
+				INFOPLIST_FILE = TouchBarServer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bikkelbroeders.TouchBarServer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5EAC87251DCA8BAD001BB8AC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = L7942L77ZU;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
+				);
+				INFOPLIST_FILE = TouchBarServer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bikkelbroeders.TouchBarServer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5E19C5231DCB94BF00DA3CB1 /* Build configuration list for PBXNativeTarget "TouchBarServer Helper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5E19C5241DCB94BF00DA3CB1 /* Debug */,
+				5E19C5251DCB94BF00DA3CB1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5EAC86F21DCA8B83001BB8AC /* Build configuration list for PBXProject "TouchBar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5EAC870C1DCA8B83001BB8AC /* Debug */,
+				5EAC870D1DCA8B83001BB8AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5EAC870E1DCA8B83001BB8AC /* Build configuration list for PBXNativeTarget "TouchBarClient" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5EAC870F1DCA8B83001BB8AC /* Debug */,
+				5EAC87101DCA8B83001BB8AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5EAC87231DCA8BAD001BB8AC /* Build configuration list for PBXNativeTarget "TouchBarServer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5EAC87241DCA8BAD001BB8AC /* Debug */,
+				5EAC87251DCA8BAD001BB8AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5EAC86EF1DCA8B83001BB8AC /* Project object */;
+}
