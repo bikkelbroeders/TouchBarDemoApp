@@ -128,9 +128,13 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
     if (!NSClassFromString(@"DFRElement")) {
         NSAlert *alert = [[NSAlert alloc] init];
         [alert setMessageText:@"Error: could not detect Touch Bar support"];
-        [alert setInformativeText:@"We need at least macOS 10.12.1 (build 16B2657)"];
+        [alert setInformativeText:[NSString stringWithFormat:@"We need at least macOS 10.12.1 (Build 16B2657).\n\nYou have: %@.\n", [NSProcessInfo processInfo].operatingSystemVersionString]];
         [alert addButtonWithTitle:@"Exit"];
-        [alert runModal];
+        [alert addButtonWithTitle:@"Get macOS Update"];
+        NSModalResponse response = [alert runModal];
+        if(response == NSAlertSecondButtonReturn) {
+            [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://support.apple.com/kb/dl1897"]];
+        }
         
         [NSApp terminate:nil];
         return;
