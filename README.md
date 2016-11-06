@@ -8,7 +8,7 @@ Touch Bar Demo App allows you to use your macOS Touch Bar from an iPad (through 
 
 ## Installation
 
-Ensure you have installed [macOS Sierra 10.12.1 build 16B2657](https://support.apple.com/kb/dl1897).
+Ensure you have installed [macOS Sierra 10.12.1 build 16B2657](https://support.apple.com/kb/dl1897), which adds support for the Touch Bar to macOS. **Build 16B2555 does not have Touch Bar support, so it won't work**.
 
 Just fetch the latest ZIP from the [release section](https://github.com/bikkelbroeders/TouchBarDemoApp/releases) section and put the extracted app into your Applications folder.
 
