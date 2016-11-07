@@ -325,12 +325,12 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
                                                                                              CGDisplayStreamUpdateRef updateRef) {
         if (status != kCGDisplayStreamFrameStatusFrameComplete) return;
         
+        IOSurfaceLock(frameSurface, kIOSurfaceLockReadOnly, nil);
         CIImage *image = [CIImage imageWithIOSurface:frameSurface];
-        if (!image) return;
-
         NSBitmapImageRep* rep = [[NSBitmapImageRep alloc] initWithCIImage:image];
         NSData* data = [rep representationUsingType:NSPNGFileType properties:@{}];
-
+        IOSurfaceUnlock(frameSurface, kIOSurfaceLockReadOnly, nil);
+        
         dispatch_semaphore_t sema = dispatch_semaphore_create(0);
 
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
