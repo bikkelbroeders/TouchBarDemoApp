@@ -85,14 +85,23 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
 - (instancetype)init {
     self = [super init];
     if(self != nil) {
-        self.styleMask = NSBorderlessWindowMask;
+        self.styleMask = NSTitledWindowMask | NSFullSizeContentViewWindowMask;
+        self.titlebarAppearsTransparent = YES;
+        self.titleVisibility = NSWindowTitleHidden;
+        [self standardWindowButton:NSWindowCloseButton].hidden = YES;
+        [self standardWindowButton:NSWindowFullScreenButton].hidden = YES;
+        [self standardWindowButton:NSWindowZoomButton].hidden = YES;
+        [self standardWindowButton:NSWindowMiniaturizeButton].hidden = YES;
+        
+        self.movable = NO;
         self.acceptsMouseMovedEvents = YES;
         self.movableByWindowBackground = NO;
-        self.level = NSPopUpMenuWindowLevel;
+        self.level = CGWindowLevelForKey(kCGAssistiveTechHighWindowLevelKey);
+        self.collectionBehavior = (NSWindowCollectionBehaviorCanJoinAllSpaces | NSWindowCollectionBehaviorStationary | NSWindowCollectionBehaviorIgnoresCycle | NSWindowCollectionBehaviorFullScreenDisallowsTiling);
         self.backgroundColor = [NSColor blackColor];
         [self _setPreventsActivation:YES];
         [self setFrame:NSMakeRect(0, 0, 1085 + 10, 30 + 10) display:YES];
-        
+
         self.contentView = [TouchBarView new];
     }
     
@@ -219,40 +228,42 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
                 [_touchBarWindow setIsVisible:NO];
         }];
     } else {
-        
-        NSPoint mousePoint = [NSEvent mouseLocation];
-        NSScreen* currentScreen = [NSScreen mainScreen];
-        for(NSScreen* screen in [NSScreen screens])
-        {
-            if(NSPointInRect(mousePoint, screen.visibleFrame)) {
-                currentScreen = screen;
-                break;
-            }
-        }
-        
-        NSRect screenFrame = currentScreen.visibleFrame;
-        CGFloat screenRight = screenFrame.origin.x + screenFrame.size.width;
-        CGFloat barWidth = _touchBarWindow.frame.size.width;
-        CGFloat barHeight = _touchBarWindow.frame.size.height;
-        
-        NSPoint origin = mousePoint;
-        origin.x -= barWidth * 0.5;
-        origin.y -= barHeight;
-        
-        if(origin.x < screenFrame.origin.x)
-            origin.x = screenFrame.origin.x;
-        
-        if(origin.x + barWidth > screenRight)
-            origin.x = screenRight - barWidth;
-        
-        if(origin.y - barHeight < screenFrame.origin.y)
-            origin.y += barHeight;
-        
-        [_touchBarWindow setFrameOrigin:origin];
+        [_touchBarWindow setFrameOrigin:self.mouseTouchOrigin];
         
         _touchBarWindow.alphaValue = 1.0;
         [_touchBarWindow setIsVisible:YES];
     }
+}
+
+- (NSPoint)mouseTouchOrigin {
+    NSPoint mousePoint = [NSEvent mouseLocation];
+    NSScreen* currentScreen = [NSScreen mainScreen];
+    for(NSScreen* screen in [NSScreen screens]) {
+        if(NSPointInRect(mousePoint, screen.visibleFrame)) {
+            currentScreen = screen;
+            break;
+        }
+    }
+    
+    NSRect screenFrame = currentScreen.visibleFrame;
+    CGFloat screenRight = screenFrame.origin.x + screenFrame.size.width;
+    CGFloat barWidth = _touchBarWindow.frame.size.width;
+    CGFloat barHeight = _touchBarWindow.frame.size.height;
+    
+    NSPoint origin = mousePoint;
+    origin.x -= barWidth * 0.5;
+    origin.y -= barHeight;
+    
+    if(origin.x < screenFrame.origin.x)
+        origin.x = screenFrame.origin.x;
+    
+    if(origin.x + barWidth > screenRight)
+        origin.x = screenRight - barWidth;
+    
+    if(origin.y - barHeight < screenFrame.origin.y)
+        origin.y += barHeight;
+
+    return origin;
 }
 
 - (void)keyEvent:(NSEvent *)event {
