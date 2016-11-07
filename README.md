@@ -2,21 +2,23 @@
 
 <img src="Resources/Screenshot.png" width="100%">
 
-Touch Bar Demo App allows you to use your macOS Touch Bar from an iPad (through USB connection) or on-screen by pressing the Fn-key.
+Touch Bar Demo App allows you to use your macOS Touch Bar from an iPad (through USB connection) or on-screen by pressing the Fn-key. It shows the original Apple Touch Bar, which changes dynamically based on the app you're currently using. With this demo app, you can try out the Touch Bar on any Mac that does not have a physical Touch Bar.
 
-[![Click for video](https://img.youtube.com/vi/RZLx03OPpUU/0.jpg)](https://www.youtube.com/watch?v=RZLx03OPpUU)
+Check out [this video](https://www.youtube.com/watch?v=RZLx03OPpUU) to see it in action.
 
-## Installation
+## How to install
 
-Ensure you have installed [macOS Sierra 10.12.1 build 16B2657](https://support.apple.com/kb/dl1897), which adds support for the Touch Bar to macOS. **Build 16B2555 does not have Touch Bar support, so it won't work**.
+First, make sure you have installed macOS Sierra 10.12.1 **build 16B2657 (!!!)**, which adds support for the Touch Bar to macOS. You can download it from [this link](https://support.apple.com/kb/dl1897).
 
-Just fetch the latest ZIP from the [release section](https://github.com/bikkelbroeders/TouchBarDemoApp/releases) section and put the extracted app into your Applications folder.
+**Just having 10.12.1 is not enough, you need the right build number. 10.12.1 build 16B2555 does not have Touch Bar support, so it WILL NOT WORK!**
 
-To build the iOS app, open `TouchBar.xcodeproj`, connect your iOS device and select the TouchBarClient target and your device:
+Then, fetch the latest ZIP from the [release section](https://github.com/bikkelbroeders/TouchBarDemoApp/releases) and put the extracted app into your Applications folder.
+
+To build the iOS app, open `TouchBar.xcodeproj`, connect your iOS device and select the TouchBarClient target and your device, like show here:
 
 <img src="Resources/Xcode.png">
 
-For sideloading the app, see [these instructions](http://bouk.co/blog/sideload-iphone/).
+To get the app installed on your iOS device, it needs to be properly signed. See [these sideloading instructions](http://osxdaily.com/2016/01/12/howto-sideload-apps-iphone-ipad-xcode/) to set this up.
 
 ## Authors
 
