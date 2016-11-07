@@ -11,6 +11,14 @@
 #import "Protocol.h"
 #import "UsbDeviceController.h"
 
+@import Carbon;
+
+typedef int CGSConnectionID;
+CG_EXTERN void CGSGetKeys(KeyMap k);
+CG_EXTERN CGSConnectionID CGSMainConnectionID(void);
+CG_EXTERN void CGSGetBackgroundEventMask(CGSConnectionID cid, int *outMask);
+CG_EXTERN CGError CGSSetBackgroundEventMask(CGSConnectionID cid, int mask);
+
 extern CGDisplayStreamRef SLSDFRDisplayStreamCreate(void *, dispatch_queue_t, CGDisplayStreamFrameAvailableHandler);
 extern BOOL DFRSetStatus(int);
 extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p);
@@ -112,12 +120,13 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
 
 @implementation AppDelegate {
     NSStatusItem *_statusItem;
-    id _monitor;
-    id _localMonitor;
     TouchBarWindow* _touchBarWindow;
     
     CGDisplayStreamRef _stream;
     UsbDeviceController *_usbDeviceController;
+    
+    BOOL _fnKeyIsDown;
+    BOOL _couldBeSoleFnKeyPress;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
@@ -180,61 +189,15 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
     BOOL value = [[defaults valueForKeyPath:keyPath] boolValue];
 
     if ([keyPath isEqualToString:@"values.EnableScreenBar"]) {
-        if (value && AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)(@{(__bridge id)kAXTrustedCheckOptionPrompt:@YES})) == NO) {
-            [defaults setValue:@NO forKeyPath:keyPath];
-            return;
-        }
-        
+        CGSConnectionID connectionId = CGSMainConnectionID();
+        int backgroundEventMask;
+        int keyEventMask = NSKeyDownMask | NSKeyUpMask | NSFlagsChangedMask;
+        CGSGetBackgroundEventMask(connectionId, &backgroundEventMask);
         if (value) {
             [_touchBarWindow setIsVisible:NO];
-
-            [self startDetectSingleFnKeyPress:^{
-                if (_touchBarWindow.visible == YES) {
-                    [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
-                        context.duration = 0.1;
-                        [[_touchBarWindow animator] setAlphaValue:0.0];
-                    } completionHandler:^{
-                        if(_touchBarWindow.alphaValue == 0.0)
-                            [_touchBarWindow setIsVisible:NO];
-                    }];
-                } else {
-
-                    NSPoint mousePoint = [NSEvent mouseLocation];
-                    NSScreen* currentScreen = [NSScreen mainScreen];
-                    for(NSScreen* screen in [NSScreen screens])
-                    {
-                        if(NSPointInRect(mousePoint, screen.visibleFrame)) {
-                            currentScreen = screen;
-                            break;
-                        }
-                    }
-                    
-                    NSRect screenFrame = currentScreen.visibleFrame;
-                    CGFloat screenRight = screenFrame.origin.x + screenFrame.size.width;
-                    CGFloat barWidth = _touchBarWindow.frame.size.width;
-                    CGFloat barHeight = _touchBarWindow.frame.size.height;
-                    
-                    NSPoint origin = mousePoint;
-                    origin.x -= barWidth * 0.5;
-                    origin.y -= barHeight;
-                    
-                    if(origin.x < screenFrame.origin.x)
-                        origin.x = screenFrame.origin.x;
-                    
-                    if(origin.x + barWidth > screenRight)
-                        origin.x = screenRight - barWidth;
-                    
-                    if(origin.y - barHeight < screenFrame.origin.y)
-                        origin.y += barHeight;
-                    
-                    [_touchBarWindow setFrameOrigin:origin];
-
-                    _touchBarWindow.alphaValue = 1.0;
-                    [_touchBarWindow setIsVisible:YES];
-                }
-            }];
+            CGSSetBackgroundEventMask(connectionId, backgroundEventMask | keyEventMask);
         } else {
-            [self stopDetectingSingleFnKeyPress];
+            CGSSetBackgroundEventMask(connectionId, backgroundEventMask & ~keyEventMask);
             [_touchBarWindow setIsVisible:NO];
         }
     } else if ([keyPath isEqualToString:@"values.EnableRemoteBar"]) {
@@ -246,73 +209,91 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
     }
 }
 
-- (void)startDetectSingleFnKeyPress:(void (^)(void))handler
-{
-    if(_monitor != nil)
-        return;
-    
-    NSMutableSet<NSNumber*>* pressedKeySet = [NSMutableSet new];
-    __block BOOL fnKeyIsDown = NO;
-    __block BOOL couldBeSoleFnKeyPress = YES;
-    __block NSEventModifierFlags otherModifiersBesideFn = 0;
-    NSEvent* (^monitorHandler)(NSEvent*) = ^(NSEvent* event) {
+- (void)toggleTouchBarWindow {
+    if (_touchBarWindow.visible == YES) {
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+            context.duration = 0.1;
+            [[_touchBarWindow animator] setAlphaValue:0.0];
+        } completionHandler:^{
+            if(_touchBarWindow.alphaValue == 0.0)
+                [_touchBarWindow setIsVisible:NO];
+        }];
+    } else {
         
-        switch(event.type) {
-            case NSKeyDown:
-                [pressedKeySet addObject:@(event.keyCode)];
-                couldBeSoleFnKeyPress = NO;
+        NSPoint mousePoint = [NSEvent mouseLocation];
+        NSScreen* currentScreen = [NSScreen mainScreen];
+        for(NSScreen* screen in [NSScreen screens])
+        {
+            if(NSPointInRect(mousePoint, screen.visibleFrame)) {
+                currentScreen = screen;
                 break;
-                
-            case NSKeyUp:
-                [pressedKeySet removeObject:@(event.keyCode)];
-                couldBeSoleFnKeyPress = NO;
-                break;
-                
-            case NSFlagsChanged: {
-                NSEventModifierFlags modifierFlags = (event.modifierFlags & NSDeviceIndependentModifierFlagsMask);
-                otherModifiersBesideFn = (modifierFlags & ~NSFunctionKeyMask);
-                BOOL newFnKeyIsDown = (modifierFlags & NSFunctionKeyMask) != 0;
-                
-                if(newFnKeyIsDown != fnKeyIsDown) {
-                    fnKeyIsDown = newFnKeyIsDown;
-                    if(otherModifiersBesideFn == 0 && pressedKeySet.count == 0) {
-                        if(fnKeyIsDown == YES){
-                            couldBeSoleFnKeyPress = YES;
-                        } else if(couldBeSoleFnKeyPress == YES) {
-                            if(handler != nil)
-                                handler();
-                        }
-                    }
-                }
-                
-                if(otherModifiersBesideFn != 0 || pressedKeySet.count > 0)
-                    couldBeSoleFnKeyPress = NO;
             }
-                break;
-                
-            default:
-                break;
         }
         
-        return event;
-    };
-    _monitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSKeyDownMask|NSKeyUpMask|NSFlagsChangedMask handler:^(NSEvent* event){
-        monitorHandler(event);
-    }];
-    _localMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSKeyDownMask|NSKeyUpMask|NSFlagsChangedMask handler:monitorHandler];
+        NSRect screenFrame = currentScreen.visibleFrame;
+        CGFloat screenRight = screenFrame.origin.x + screenFrame.size.width;
+        CGFloat barWidth = _touchBarWindow.frame.size.width;
+        CGFloat barHeight = _touchBarWindow.frame.size.height;
+        
+        NSPoint origin = mousePoint;
+        origin.x -= barWidth * 0.5;
+        origin.y -= barHeight;
+        
+        if(origin.x < screenFrame.origin.x)
+            origin.x = screenFrame.origin.x;
+        
+        if(origin.x + barWidth > screenRight)
+            origin.x = screenRight - barWidth;
+        
+        if(origin.y - barHeight < screenFrame.origin.y)
+            origin.y += barHeight;
+        
+        [_touchBarWindow setFrameOrigin:origin];
+        
+        _touchBarWindow.alphaValue = 1.0;
+        [_touchBarWindow setIsVisible:YES];
+    }
 }
 
-- (void)stopDetectingSingleFnKeyPress
-{
-    if(_monitor != nil)
-    {
-        [NSEvent removeMonitor:_monitor];
-        _monitor = nil;
-    }
-    
-    if (_localMonitor) {
-        [NSEvent removeMonitor:_localMonitor];
-        _localMonitor = nil;
+- (void)keyEvent:(NSEvent *)event {
+    if (![[[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"EnableScreenBar"] boolValue]) return;
+
+    switch(event.type) {
+        case NSKeyDown:
+            _couldBeSoleFnKeyPress = NO;
+            break;
+            
+        case NSKeyUp:
+            _couldBeSoleFnKeyPress = NO;
+            break;
+            
+        case NSFlagsChanged: {
+            NSEventModifierFlags modifierFlags = (event.modifierFlags & NSDeviceIndependentModifierFlagsMask);
+            BOOL newFnKeyIsDown = (modifierFlags & NSFunctionKeyMask) != 0;
+            
+            if(newFnKeyIsDown != _fnKeyIsDown) {
+                _fnKeyIsDown = newFnKeyIsDown;
+                
+                KeyMap keymap;
+                CGSGetKeys(keymap);
+                
+                if (keymap[0].bigEndianValue == 0 && keymap[2].bigEndianValue == 0 && keymap[3].bigEndianValue == 0) {
+                    if (_fnKeyIsDown) {
+                        _couldBeSoleFnKeyPress = keymap[1].bigEndianValue == 1 << 31;
+                    } else if (_couldBeSoleFnKeyPress && keymap[1].bigEndianValue == 0) {
+                        [self toggleTouchBarWindow];
+                    }
+                } else {
+                    _couldBeSoleFnKeyPress = NO;
+                }
+                
+            } else {
+                _couldBeSoleFnKeyPress = NO;
+            }
+        }
+            
+        default:
+            break;
     }
 }
 
