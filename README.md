@@ -8,9 +8,9 @@ Check out [this video](https://www.youtube.com/watch?v=RZLx03OPpUU) to see it in
 
 ## How to install
 
-First, make sure you have installed macOS Sierra 10.12.1 **build 16B2657 (!!!)**, which adds support for the Touch Bar to macOS. You can download it from [this link](https://support.apple.com/kb/dl1897).
+First, make sure you have installed macOS Sierra 10.12.1 **build 16B2657**, which adds support for the Touch Bar to macOS. You can download it from [this link](https://support.apple.com/kb/dl1897).
 
-**Just having 10.12.1 is not enough, you need the right build number. 10.12.1 build 16B2555 does not have Touch Bar support, so it WILL NOT WORK!**
+:warning: **Just having 10.12.1 is not enough, you need the right build number. 10.12.1 build 16B2555 does not have Touch Bar support, so it WILL NOT WORK!**
 
 Then, fetch the latest ZIP from the [release section](https://github.com/bikkelbroeders/TouchBarDemoApp/releases) and put the extracted app into your Applications folder.
 
