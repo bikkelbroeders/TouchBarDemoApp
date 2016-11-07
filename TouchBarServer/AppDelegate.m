@@ -319,7 +319,7 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
 - (void)startStreaming {
     if (_stream) return;
     
-    _stream = SLSDFRDisplayStreamCreate(NULL, dispatch_get_main_queue(), ^(CGDisplayStreamFrameStatus status,
+    _stream = SLSDFRDisplayStreamCreate(NULL, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(CGDisplayStreamFrameStatus status,
                                                                                              uint64_t displayTime,
                                                                                              IOSurfaceRef frameSurface,
                                                                                              CGDisplayStreamUpdateRef updateRef) {
@@ -330,9 +330,12 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
 
         NSBitmapImageRep* rep = [[NSBitmapImageRep alloc] initWithCIImage:image];
         NSData* data = [rep representationUsingType:NSPNGFileType properties:@{}];
-        
+
+        dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             [_usbDeviceController broadcaseMessageOfType:ProtocolFrameTypeImage data:data callback:^(NSDictionary *errors) {
+                dispatch_semaphore_signal(sema);
                 if (errors) {
                     for (NSNumber *deviceId in errors) {
                         NSError *error = errors[deviceId];
@@ -341,6 +344,8 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
                 }
             }];
         });
+        
+        dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
     });
     
     DFRSetStatus(2);
