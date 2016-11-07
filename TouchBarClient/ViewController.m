@@ -24,37 +24,60 @@ static const NSTimeInterval kAnimationDuration = 0.5;
 @end
 
 @implementation ViewController {
-    PTChannel *_channel;
+    PTChannel *_listenChannel;
+    PTChannel *_peerChannel;
     BOOL _active;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    PTChannel* channel = [PTChannel channelWithDelegate:self];
-    [channel listenOnPort:kProtocolPort IPv4Address:INADDR_LOOPBACK callback:^(NSError *error) {
-        if (error != nil) {
-            NSLog(@"Failed to listen on localhost:%d: %@", kProtocolPort, error);
-        } else {
-            NSLog(@"Listening on localhost:%d", kProtocolPort);
-        }
-    }];
-    
-    [self deactivateTouchBar:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopListening) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startListening) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [self startListening];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
+    [self stopListening];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     [super viewDidDisappear:animated];
 }
 
+- (void)startListening {
+    [self stopListening];
+    
+    PTChannel *channel = [PTChannel channelWithDelegate:self];
+    [channel listenOnPort:kProtocolPort IPv4Address:INADDR_LOOPBACK callback:^(NSError *error) {
+        if (error != nil) {
+            NSLog(@"Failed to listen on localhost:%d: %@", kProtocolPort, error);
+        } else {
+            _listenChannel = channel;
+        }
+    }];
+}
+
+- (void)stopListening {
+    [self deactivateTouchBar:NO];
+    
+    if (_listenChannel) {
+        [_listenChannel close];
+        _listenChannel = nil;
+    }
+    
+    if (_peerChannel) {
+        [_peerChannel close];
+        _peerChannel = nil;
+    }
+}
+
 - (IBAction)recognizerFired:(UIGestureRecognizer*)recognizer {
-    if (!_channel || !_active) return;
+    if (!_peerChannel || !_active) return;
     
     MouseEvent event;
 
@@ -81,7 +104,7 @@ static const NSTimeInterval kAnimationDuration = 0.5;
         CFRelease(immutableSelf);
     });
     
-    [_channel sendFrameOfType:ProtocolFrameTypeMouseEvent tag:PTFrameNoTag withPayload:payload callback:^(NSError *error) {
+    [_peerChannel sendFrameOfType:ProtocolFrameTypeMouseEvent tag:PTFrameNoTag withPayload:payload callback:^(NSError *error) {
         if (error) {
             NSLog(@"Failed to send message: %@", error);
         }
@@ -98,6 +121,8 @@ static const NSTimeInterval kAnimationDuration = 0.5;
             _instructionLabel.alpha = 0;
             [self.view layoutIfNeeded];
         }];
+    } else {
+        _instructionLabel.alpha = 0;
     }
 }
 
@@ -111,33 +136,18 @@ static const NSTimeInterval kAnimationDuration = 0.5;
             _instructionLabel.alpha = 1;
             [self.view layoutIfNeeded];
         }];
+    } else {
+        _instructionLabel.alpha = 1;
     }
 }
 
 #pragma mark - PTChannelDelegate
-
-- (BOOL)ioFrameChannel:(PTChannel*)channel shouldAcceptFrameOfType:(uint32_t)type tag:(uint32_t)tag payloadSize:(uint32_t)payloadSize {
-    if (channel != _channel) {
-        return NO;
-    }
-    
-    switch (type) {
-        case ProtocolFrameTypeImage:
-            return YES;
-        default:
-            NSLog(@"Unexpected frame of type %u", type);
-            [channel close];
-            [self deactivateTouchBar:YES];
-            return NO;
-    }
-}
 
 - (void)ioFrameChannel:(PTChannel*)channel didReceiveFrameOfType:(uint32_t)type tag:(uint32_t)tag payload:(PTData*)payload {
     switch (type) {
         case ProtocolFrameTypeImage: {
             if (payload.data == nil) break;
             UIImage *image = [UIImage imageWithData:[NSData dataWithBytes:payload.data length:payload.length]];
-            //UIImageView *imageView = (UIImageView *)self.view;
             _imageView.image = image;
             
             [_imageView removeConstraint:_aspectRatioConstraint];
@@ -157,22 +167,20 @@ static const NSTimeInterval kAnimationDuration = 0.5;
 }
 
 - (void)ioFrameChannel:(PTChannel*)channel didEndWithError:(NSError*)error {
-    if (error) {
-        NSLog(@"%@ ended with error: %@", channel, error);
-    } else {
-        NSLog(@"Disconnected from %@", channel.userInfo);
+    if (channel == _listenChannel && error) {
+        [self startListening];
     }
     [self deactivateTouchBar:YES];
 }
 
 - (void)ioFrameChannel:(PTChannel*)channel didAcceptConnection:(PTChannel*)otherChannel fromAddress:(PTAddress*)address {
-    if (_channel) {
-        [_channel cancel];
+    if (_peerChannel) {
+        [_peerChannel close];
+        _peerChannel = nil;
     }
-    
-    _channel = otherChannel;
-    _channel.userInfo = address;
-    NSLog(@"Connected to %@", address);
+
+    _peerChannel = otherChannel;
+    _peerChannel.userInfo = address;
     [self activateTouchBar:YES];
 }
 

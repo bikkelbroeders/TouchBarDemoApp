@@ -22,6 +22,7 @@
 		5EAC871C1DCA8BAC001BB8AC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC871B1DCA8BAC001BB8AC /* main.m */; };
 		5EAC871E1DCA8BAD001BB8AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EAC871D1DCA8BAD001BB8AC /* Assets.xcassets */; };
 		5EAC87211DCA8BAD001BB8AC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5EAC871F1DCA8BAD001BB8AC /* MainMenu.xib */; };
+		5EC06EB91DCFCF4200A7AA57 /* UsbDeviceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EC06EB81DCFCF4200A7AA57 /* UsbDeviceController.m */; };
 		5EC478651DCBD51200C06ED1 /* TouchBarServer Helper.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5E19C5151DCB94BF00DA3CB1 /* TouchBarServer Helper.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5EF078601DCA8CC400BD69DA /* PTChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF078581DCA8CC400BD69DA /* PTChannel.m */; };
 		5EF078611DCA8CC400BD69DA /* PTChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF078581DCA8CC400BD69DA /* PTChannel.m */; };
@@ -82,6 +83,8 @@
 		5EAC871D1DCA8BAD001BB8AC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5EAC87201DCA8BAD001BB8AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		5EAC87221DCA8BAD001BB8AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5EC06EB71DCFCF4200A7AA57 /* UsbDeviceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsbDeviceController.h; sourceTree = "<group>"; };
+		5EC06EB81DCFCF4200A7AA57 /* UsbDeviceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UsbDeviceController.m; sourceTree = "<group>"; };
 		5EF078551DCA8CC400BD69DA /* Peertalk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peertalk.h; sourceTree = "<group>"; };
 		5EF078561DCA8CC400BD69DA /* prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = "<group>"; };
 		5EF078571DCA8CC400BD69DA /* PTChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTChannel.h; sourceTree = "<group>"; };
@@ -201,6 +204,8 @@
 				5EAC87181DCA8BAC001BB8AC /* AppDelegate.m */,
 				5E19C50E1DCB947B00DA3CB1 /* StartAtLoginController.h */,
 				5E19C50F1DCB947B00DA3CB1 /* StartAtLoginController.m */,
+				5EC06EB71DCFCF4200A7AA57 /* UsbDeviceController.h */,
+				5EC06EB81DCFCF4200A7AA57 /* UsbDeviceController.m */,
 				5EAC871D1DCA8BAD001BB8AC /* Assets.xcassets */,
 				5EAC871F1DCA8BAD001BB8AC /* MainMenu.xib */,
 				5EAC87221DCA8BAD001BB8AC /* Info.plist */,
@@ -401,6 +406,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5EAC871C1DCA8BAC001BB8AC /* main.m in Sources */,
+				5EC06EB91DCFCF4200A7AA57 /* UsbDeviceController.m in Sources */,
 				5EF078631DCA8CC400BD69DA /* PTProtocol.m in Sources */,
 				5EF078611DCA8CC400BD69DA /* PTChannel.m in Sources */,
 				5EF078651DCA8CC400BD69DA /* PTUSBHub.m in Sources */,

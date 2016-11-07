@@ -9,9 +9,7 @@
 #import "AppDelegate.h"
 
 #import "Protocol.h"
-
-NSString *const ErrorDomain = @"com.bikkelbroeders.touchbar";
-static const NSTimeInterval kReconnectDelay = 1.0;
+#import "UsbDeviceController.h"
 
 extern CGDisplayStreamRef SLSDFRDisplayStreamCreate(void *, dispatch_queue_t, CGDisplayStreamFrameAvailableHandler);
 extern BOOL DFRSetStatus(int);
@@ -37,6 +35,7 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
                                                                                uint64_t displayTime,
                                                                                IOSurfaceRef frameSurface,
                                                                                CGDisplayStreamUpdateRef updateRef) {
+            if (status != kCGDisplayStreamFrameStatusFrameComplete) return;
             _displayView.layer.contents = (__bridge id)(frameSurface);
         });
         
@@ -102,7 +101,7 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
 
 @end
 
-@interface AppDelegate () <PTChannelDelegate>
+@interface AppDelegate () <UsbDeviceControllerDelegate>
 
 @property (weak) IBOutlet NSWindow *window;
 @property (weak) IBOutlet NSMenu *menu;
@@ -116,12 +115,9 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
     id _monitor;
     id _localMonitor;
     TouchBarWindow* _touchBarWindow;
-
-    dispatch_queue_t _connectQueue;
-    NSNumber *_connectingDeviceID;
-    NSNumber *_connectedDeviceID;
-    PTChannel *_connectedChannel;
+    
     CGDisplayStreamRef _stream;
+    UsbDeviceController *_usbDeviceController;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
@@ -139,6 +135,9 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
         [NSApp terminate:nil];
         return;
     }
+    
+    _usbDeviceController = [[UsbDeviceController alloc] initWithPort:kProtocolPort];
+    _usbDeviceController.delegate = self;
     
     _touchBarWindow = [TouchBarWindow new];
     [_touchBarWindow setIsVisible:NO];
@@ -170,10 +169,6 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
     _statusItem.highlightMode = YES;
     _statusItem.image = [NSImage imageNamed:@"NSSlideshowTemplate"];
     [self stopStreaming];
-    
-    _connectQueue = dispatch_queue_create("TouchBar.connectQueue", DISPATCH_QUEUE_SERIAL);
-
-    [self startListeningForDevices];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
@@ -244,11 +239,9 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
         }
     } else if ([keyPath isEqualToString:@"values.EnableRemoteBar"]) {
         if (value) {
-            if (_connectingDeviceID && !_connectedDeviceID) {
-                [self enqueueConnectToUSBDevice];
-            }
+            [_usbDeviceController startConnectingToUsbDevices];
         } else {
-            [self disconnectFromCurrentChannel];
+            [_usbDeviceController stopConnectingToUsbDevices];
         }
     }
 }
@@ -330,25 +323,24 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
                                                                                              uint64_t displayTime,
                                                                                              IOSurfaceRef frameSurface,
                                                                                              CGDisplayStreamUpdateRef updateRef) {
-        if (_connectedChannel == nil) {
-            [self stopStreaming];
-            return;
-        }
+        if (status != kCGDisplayStreamFrameStatusFrameComplete) return;
         
         CIImage *image = [CIImage imageWithIOSurface:frameSurface];
+        if (!image) return;
+
         NSBitmapImageRep* rep = [[NSBitmapImageRep alloc] initWithCIImage:image];
         NSData* data = [rep representationUsingType:NSPNGFileType properties:@{}];
         
-        CFDataRef immutableSelf = CFBridgingRetain([data copy]);
-        dispatch_data_t payload = dispatch_data_create(data.bytes, data.length, dispatch_get_main_queue(), ^{
-            CFRelease(immutableSelf);
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            [_usbDeviceController broadcaseMessageOfType:ProtocolFrameTypeImage data:data callback:^(NSDictionary *errors) {
+                if (errors) {
+                    for (NSNumber *deviceId in errors) {
+                        NSError *error = errors[deviceId];
+                        NSLog(@"Failed to send message to device %@: %@", deviceId, error);
+                    }
+                }
+            }];
         });
-        
-        [_connectedChannel sendFrameOfType:ProtocolFrameTypeImage tag:PTFrameNoTag withPayload:payload callback:^(NSError *error) {
-            if (error) {
-                NSLog(@"Failed to send message: %@", error);
-            }
-        }];
     });
     
     DFRSetStatus(2);
@@ -362,107 +354,24 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
     }
 }
 
-#pragma mark - Connection stuff
+#pragma mark - UsbDeviceControllerDelegate
 
-- (void)startListeningForDevices {
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    
-    [nc addObserverForName:PTUSBDeviceDidAttachNotification object:PTUSBHub.sharedHub queue:nil usingBlock:^(NSNotification *note) {
-        NSNumber *deviceID = note.userInfo[@"DeviceID"];
-//        NSLog(@"PTUSBDeviceDidAttachNotification: %@", deviceID);
-        
-        if (_connectedDeviceID) {
-            return;
-        }
-        
-        dispatch_async(_connectQueue, ^{
-            if (!_connectingDeviceID || ![deviceID isEqualToNumber:_connectingDeviceID]) {
-                [self disconnectFromCurrentChannel];
-                _connectingDeviceID = deviceID;
-                
-                NSUserDefaultsController *defaults = [NSUserDefaultsController sharedUserDefaultsController];
-                if ([[[defaults values] valueForKey:@"EnableRemoteBar"] boolValue]) {
-                    [self enqueueConnectToUSBDevice];
-                }
-            }
-        });
-    }];
-
-    [nc addObserverForName:PTUSBDeviceDidDetachNotification object:PTUSBHub.sharedHub queue:nil usingBlock:^(NSNotification *note) {
-        NSNumber *deviceID = note.userInfo[@"DeviceID"];
-//        NSLog(@"PTUSBDeviceDidDetachNotification: %@", deviceID);
-        
-        if ([_connectingDeviceID isEqualToNumber:deviceID]) {
-            _connectingDeviceID = nil;
-            [_connectedChannel close];
-            _connectedChannel = nil;
-            [self stopStreaming];
-        }
-    }];
+- (void)deviceDidConnect:(NSNumber *)deviceId {
+    // Always start a new stream so the new device gets an initial frame
+    [self stopStreaming];
+    [self startStreaming];
 }
 
-- (void)enqueueConnectToUSBDevice {
-    dispatch_async(_connectQueue, ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self connectToUSBDevice];
-        });
-    });
-}
-
-
-- (void)connectToUSBDevice {
-    if (_connectedDeviceID) {
-        return;
-    }
-
-    PTChannel *channel = [PTChannel channelWithDelegate:self];
-    channel.userInfo = _connectingDeviceID;
-
-    [channel connectToPort:kProtocolPort overUSBHub:PTUSBHub.sharedHub deviceID:_connectingDeviceID callback:^(NSError *error) {
-        if (error) {
-            if (error.domain == PTUSBHubErrorDomain && error.code == PTUSBHubErrorConnectionRefused) {
-//                NSLog(@"Failed to connect to device %@: %@", channel.userInfo, error);
-            } else {
-                NSLog(@"Failed to connect to device %@: %@", channel.userInfo, error);
-            }
-            if (channel.userInfo == _connectingDeviceID) {
-                [self performSelector:@selector(enqueueConnectToUSBDevice) withObject:nil afterDelay:kReconnectDelay];
-            }
-        } else {
-            _connectedDeviceID = _connectingDeviceID;
-            _connectedChannel = channel;
-            [self startStreaming];
-            NSLog(@"Connected to device %@", _connectedDeviceID);
-        }
-    }];
-}
-
-- (void)disconnectFromCurrentChannel {
-    if (_connectedDeviceID && _connectedChannel) {
-        [_connectedChannel close];
-        _connectedChannel = nil;
+- (void)deviceDidDisconnect:(NSNumber *)deviceId {
+    if ([[_usbDeviceController connectedDeviceIds] count] == 0) {
         [self stopStreaming];
     }
 }
 
-#pragma mark - PTChannelDelegate
-
-- (BOOL)ioFrameChannel:(PTChannel*)channel shouldAcceptFrameOfType:(uint32_t)type tag:(uint32_t)tag payloadSize:(uint32_t)payloadSize {
-    switch (type) {
-        case ProtocolFrameTypeMouseEvent:
-            return YES;
-        default:
-            NSLog(@"Unexpected frame of type %u", type);
-            [channel close];
-            return NO;
-    }
-}
-
-- (void)ioFrameChannel:(PTChannel*)channel didReceiveFrameOfType:(uint32_t)type tag:(uint32_t)tag payload:(PTData*)payload {
+- (void)device:(NSNumber *)deviceId didReceiveMessageOfType:(uint32_t)type data:(NSData *)data {
     switch (type) {
         case ProtocolFrameTypeMouseEvent: {
-            if (payload.data == nil) break;
-            MouseEvent *event = (MouseEvent *)payload.data;
+            MouseEvent *event = (MouseEvent *)data.bytes;
             NSPoint location = NSMakePoint(event->x, event->y);
             NSEventType eventType = NSEventTypeLeftMouseDown;
             switch(event->type) {
@@ -482,18 +391,6 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
         }
         default:
             break;
-    }
-}
-
-- (void)ioFrameChannel:(PTChannel*)channel didEndWithError:(NSError*)error {
-    if (_connectedDeviceID && [_connectedDeviceID isEqualToNumber:channel.userInfo]) {
-        _connectedDeviceID = nil;
-    }
-    
-    if (_connectedChannel == channel) {
-        _connectedChannel = nil;
-        [self stopStreaming];
-        NSLog(@"Disconnected from %@", channel.userInfo);
     }
 }
 
