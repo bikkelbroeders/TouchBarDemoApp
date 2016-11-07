@@ -138,15 +138,14 @@ typedef NS_ENUM(NSUInteger, ConnectionState) {
 - (void)broadcaseMessageOfType:(uint32_t)type data:(NSData *)data callback:(void(^)(NSDictionary *errors))callback {
     dispatch_data_t payload = [data dispatchData];
 
-    NSUInteger numberOfDevices = [_attachedDevices count];
-    if (numberOfDevices > 0) {
+    NSArray *connectedDeviceIds = self.connectedDeviceIds;
+    if (connectedDeviceIds.count > 0) {
         NSMutableDictionary *results = [NSMutableDictionary new];
-        for (NSNumber *deviceId in _attachedDevices) {
+        for (NSNumber *deviceId in connectedDeviceIds) {
             AttachedDevice *device = _attachedDevices[deviceId];
-            if (device.connectionState != ConnectionStateConnected) continue;
             [self sendToDevice:device type:type payload:payload callback:^(NSError *error) {
                 results[device.deviceId] = error ? error : [NSNull null];
-                if (results.count == numberOfDevices) {
+                if (results.count == connectedDeviceIds.count && callback) {
                     NSSet *nullResults = [results keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL *stop) {
                         return [obj isEqual:[NSNull null]];
                     }];
