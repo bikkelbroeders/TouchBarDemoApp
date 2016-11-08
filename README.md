@@ -18,7 +18,7 @@ To build the iOS app, open `TouchBar.xcodeproj`, connect your iOS device and sel
 
 <img src="Resources/Xcode.png">
 
-To get the app installed on your iOS device, it needs to be properly signed. See [these sideloading instructions](http://osxdaily.com/2016/01/12/howto-sideload-apps-iphone-ipad-xcode/) to set this up.
+To get the app installed on your iOS device, it needs to be properly signed. See [these sideloading instructions](https://www.reddit.com/r/sideloaded/wiki/how-to-sideload) to set this up.
 
 ## Authors
 
