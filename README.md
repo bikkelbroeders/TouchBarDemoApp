@@ -8,17 +8,28 @@ Check out [this video](https://www.youtube.com/watch?v=RZLx03OPpUU) to see it in
 
 ## How to install
 
-First, make sure you have installed macOS Sierra 10.12.1 **build 16B2657**, which adds support for the Touch Bar to macOS. You can download it from [this link](https://support.apple.com/kb/dl1897).
+1. Make sure you have macOS Sierra 10.12.1 **build 16B2657** installed, which adds support for the Touch Bar to macOS. 
 
-:warning: **Just having 10.12.1 is not enough, you need the right build number. 10.12.1 build 16B2555 does not have Touch Bar support, so it WILL NOT WORK!**
+  [You can download it from this link](https://support.apple.com/kb/dl1897).
 
-Then, fetch the latest ZIP from the [release section](https://github.com/bikkelbroeders/TouchBarDemoApp/releases) and put the extracted app into your Applications folder.
+  :warning: **Just having 10.12.1 is not enough, you need the right build number. 10.12.1 build 16B2555 does not have Touch Bar support, so it WILL NOT WORK!**
+  
+  You can check which build you have by clicking the version number in About This Mac:
+  
+  ![how to check macOS build number](http://g.recordit.co/9mz6r6t9rA.gif)
 
-To build the iOS app, open `TouchBar.xcodeproj`, connect your iOS device and select the TouchBarClient target and your device, like show here:
+2. [Fetch the ZIP from Releases](https://github.com/bikkelbroeders/TouchBarDemoApp/releases/latest).
 
-<img src="Resources/Xcode.png">
+  - TouchBarServer.zip to run the Touch Bar on your Mac
+  - Source code (zip) to build the iOS app
 
-To get the app installed on your iOS device, it needs to be properly signed. See [these sideloading instructions](https://www.reddit.com/r/sideloaded/wiki/how-to-sideload) to set this up.
+3. To run the Touch Bar on your Mac, put the app into your Applications folder and open it. Press the Fn-key to toggle the Touch Bar on and off.
+
+4. To build the iOS app, open `TouchBar.xcodeproj`, connect your iOS device and select the TouchBarClient target and your device, like show here:
+
+  <img src="Resources/Xcode.png">
+
+  To get the app installed on your iOS device, it needs to be properly signed. See [these sideloading instructions](https://www.reddit.com/r/sideloaded/wiki/how-to-sideload) to set this up.
 
 ## Authors
 
