@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="user-scalable=0">
+        <script>
+            var KeyEventType = {
+                KeyDown:      10,
+                KeyUp:        11,
+                FlagsChanged: 12,
+            };
+
+            var KeyEventModifierFlag = {
+                CapsLock: 1 << 0,
+                Shift:    1 << 1,
+                Control:  1 << 2,
+                Option:   1 << 3,
+                Command:  1 << 4,
+                Function: 1 << 5,
+            };
+
+            var VirtualKey = {
+                CapsLock:     0x39,
+                Shift:        0x38,
+                RightShift:   0x3C,
+                Control:      0x3B,
+                RightControl: 0x3E,
+                Option:       0x3A,
+                RightOption:  0x3D,
+                Command:      0x37,
+                RightCommand: 0x36,
+                Function:     0x3F,
+            };
+
+            var freeAfterInit = {
+                keysByKeyCode: {/*KEYDATA*/},
+            };
+            var keysByIdentifier = {};
+            var keysByMacKeyCode = {};
+            var currentModifiers = 0;
+            
+            window.KVEventController = {
+                'handleMouseDownKey_': function(identifier) { handleKeyEvent(identifier, true); },
+                'handleMouseUpKey_':   function(identifier) { handleKeyEvent(identifier, false); },
+                'handleMouseOutKey_':  function(identifier) {},
+            };
+
+            function init() {
+                var elements = document.getElementsByTagName('g');
+                for (var i = 0; i < elements.length; i++) {
+                    var element = elements[i];
+                    var identifier = element.getAttribute('id');
+                    var keyCode = element.getAttribute('keycode');
+                    var key = freeAfterInit.keysByKeyCode[keyCode];
+                    if (!key) continue;
+                    
+                    switch (key.k) {
+                        case VirtualKey.CapsLock:
+                            key.modifier = KeyEventModifierFlag.CapsLock;
+                            break;
+                        case VirtualKey.Shift:
+                        case VirtualKey.RightShift:
+                            key.modifier = KeyEventModifierFlag.Shift;
+                            break;
+                        case VirtualKey.Control:
+                        case VirtualKey.RightControl:
+                            key.modifier = KeyEventModifierFlag.Control;
+                            break;
+                        case VirtualKey.Option:
+                        case VirtualKey.RightOption:
+                            key.modifier = KeyEventModifierFlag.Option;
+                            break;
+                        case VirtualKey.Command:
+                        case VirtualKey.RightCommand:
+                            key.modifier = KeyEventModifierFlag.Command;
+                            break;
+                        case VirtualKey.Function:
+                            key.modifier = KeyEventModifierFlag.Function;
+                            break;
+                        default:
+                            key.pressed = false;
+                            break;
+                    }
+                    
+                    keysByIdentifier[identifier] = key;
+                    keysByMacKeyCode[key.k] = key;
+                }
+
+                updateAllKeys();
+                
+                for (var key in freeAfterInit) {
+                    delete freeAfterInit[key];
+                }
+            }
+        
+            function handleKeyEvent(identifier, isDown) {
+                var key = keysByIdentifier[identifier];
+                if (key == null) return;
+
+                var keyEvent = {
+                    type: isDown ? KeyEventType.KeyDown : KeyEventType.KeyUp,
+                    key: key.k,
+                    modifiers: currentModifiers,
+                    click: isDown,
+                };
+
+                if (key.modifier) {
+                    updateModifiersForKey(key, isDown);
+                    if (currentModifiers != keyEvent.modifiers) {
+                        keyEvent.type = KeyEventType.FlagsChanged;
+                        keyEvent.modifiers = currentModifiers;
+                    } else {
+                        keyEvent = null;
+                    }
+                } else {
+                    key.pressed = isDown;
+                }
+                updateAllKeys();
+
+                if (keyEvent) {
+                    webkit.messageHandlers.keyEvent.postMessage(keyEvent);
+                }
+            }
+        
+            function externalKeyEvent(keyEvent) {
+                var key = keysByMacKeyCode[keyEvent.key];
+                if (key == null) return;
+
+                switch (keyEvent.type) {
+                    case KeyEventType.KeyDown:
+                        key.pressed = true;
+                        break;
+                    case KeyEventType.KeyUp:
+                        key.pressed = false;
+                        break;
+                    case KeyEventType.FlagsChanged:
+                        currentModifiers = keyEvent.modifiers;
+                        break;
+                }
+                updateAllKeys();
+            }
+        
+            function modifierForKey(key) {
+                switch (key.k) {
+                    case VirtualKey.CapsLock:
+                        return KeyEventModifierFlag.CapsLock;
+                    case VirtualKey.Shift:
+                    case VirtualKey.RightShift:
+                        return KeyEventModifierFlag.Shift;
+                    case VirtualKey.Control:
+                    case VirtualKey.RightControl:
+                        return KeyEventModifierFlag.Control;
+                    case VirtualKey.Option:
+                    case VirtualKey.RightOption:
+                        return KeyEventModifierFlag.Option;
+                    case VirtualKey.Command:
+                    case VirtualKey.RightCommand:
+                        return KeyEventModifierFlag.Command;
+                    case VirtualKey.Function:
+                        return KeyEventModifierFlag.Function;
+                    default:
+                        return 0;
+                }
+            }
+
+            function updateModifiersForKey(key, isDown) {
+                var modifier = modifierForKey(key);
+                switch (modifier) {
+                    case 0:
+                        break;
+                    case KeyEventModifierFlag.CapsLock:
+                        if (isDown) currentModifiers ^= modifier;
+                        break;
+                    default:
+                        if (isDown) {
+                            currentModifiers |= modifier;
+                        } else {
+                            currentModifiers &= (~modifier);
+                        }
+                        break;
+                }
+            }
+            
+            function updateAllKeys() {
+                for (var identifier in keysByIdentifier) {
+                    var key = keysByIdentifier[identifier];
+
+                    var cap = key.c[currentModifiers];
+                    if (!cap) cap = key.d;
+
+                    setKeyTitle(identifier, cap.x + '\uFE0E');
+
+                    var isPressed = key.modifier ? (currentModifiers & key.modifier) : key.pressed;
+                    if (!cap.t) {
+                        isPressed ? pressKeyWithId(identifier) : depressKeyWithId(identifier);
+                    } else if (cap.t & (1 << 1)) {
+                        isPressed ? pressFunctionKeyWithId(identifier) : depressFunctionKeyWithId(identifier);
+                    } else if (cap.t & (1 << 2)) {
+                        isPressed ? pressControlKeyWithId(identifier) : depressControlKeyWithId(identifier);
+                    } else if (cap.t & (1 << 3)) {
+                        isPressed ? pressDeadKeyWithId(identifier) : depressDeadKeyWithId(identifier);
+                    }
+
+                    setElementCharacteristic(identifier, 'fill: ' + (isPressed ? '#2a2a2a' : 'black'));
+                }
+            }
+        </script>
+        <style>
+            body {
+                padding: 0;
+                margin: 0;
+                background-color: transparent;
+                -webkit-tap-highlight-color: transparent;
+                -webkit-user-select: none;
+                -webkit-touch-callout: none;
+            }
+        
+        </style>
+    </head>
+    <body onload="init()">
+        %SVGELEMENT%
+        <style>
+            svg {
+                width: 100vw;
+                height: 100vh;
+            }
+        
+            .background {
+                fill: transparent;
+            }
+        
+            .keyBackground {
+                fill: black;
+                stroke-color: #777;
+                stroke-width: 0.2px;
+            }
+
+            .standardText, .deadKeyText, .commandKeyText, .functionKeyText {
+                fill: #eee;
+                font-family: '-apple-system-font';
+                font-weight: 300;
+                background-color: red;
+            }
+        </style>
+        <script>
+            var touchbarButtonHeight = 10;
+            var touchbarButtonMargin = 2;
+            var touchbarButtonSpace = 1 + touchbarButtonHeight + touchbarButtonMargin;
+            
+            var svg = document.getElementsByTagName('svg')[0];
+            
+            var viewBox = svg.getAttributeNS(null, 'viewBox').split(' ');
+            viewBox[1] = parseInt(viewBox[1]) - touchbarButtonSpace;
+            viewBox[3] = parseInt(viewBox[3]) + touchbarButtonSpace;
+            svg.setAttributeNS(null, 'viewBox', viewBox.join(' '));
+            
+            var touchbarButtonElement = svg.getElementsByTagName('rect')[0].cloneNode(true);
+            touchbarButtonElement.setAttributeNS(null, 'x', '1');
+            touchbarButtonElement.setAttributeNS(null, 'y', -touchbarButtonMargin - touchbarButtonHeight);
+            touchbarButtonElement.setAttributeNS(null, 'rx', '2');
+            touchbarButtonElement.setAttributeNS(null, 'ry', '2');
+            touchbarButtonElement.setAttributeNS(null, 'width', viewBox[2] - 2);
+            touchbarButtonElement.setAttributeNS(null, 'height', touchbarButtonHeight);
+            touchbarButtonElement.setAttributeNS(null, 'class', 'keyBackground');
+            
+            svg.appendChild(touchbarButtonElement);
+            
+            var horizontalSizeIncrease = 1;
+            var verticalSizeIncrease = 2;
+            var keyElements = svg.getElementsByClassName('keyBackground');
+            for (var i = 0; i < keyElements.length; i++) {
+                var keyElement = keyElements[i];
+                if (keyElement.tagName == 'rect') {
+                    var x = parseFloat(keyElement.getAttributeNS(null, 'x'));
+                    var y = parseFloat(keyElement.getAttributeNS(null, 'y'));
+                    var width = parseFloat(keyElement.getAttributeNS(null, 'width'));
+                    var height = parseFloat(keyElement.getAttributeNS(null, 'height'));
+                    keyElement.setAttributeNS(null, 'x', x - horizontalSizeIncrease / 2);
+                    keyElement.setAttributeNS(null, 'y', y - verticalSizeIncrease / 2);
+                    keyElement.setAttributeNS(null, 'width', width + horizontalSizeIncrease);
+                    keyElement.setAttributeNS(null, 'height', height + verticalSizeIncrease);
+                } else if (keyElement.tagName == 'path') {
+                    var path = keyElement.getAttributeNS(null, 'd');
+                    var args = path.split(/\s+/);
+                    var parts = [];
+                    for (var j = 0; j < args.length; j++) {
+                        var arg = args[j];
+                        if (arg.match(/^[a-z]/i)) {
+                            parts.push([arg]);
+                        } else if (parts.length > 0) {
+                            parts[parts.length-1].push(arg);
+                        }
+                    }
+                    var minX =  99999, minY =  99999;
+                    var maxX = -99999, maxY = -99999;
+                    for (var run = 0; run < 2; run++) {
+                        for (var j = 0; j < parts.length; j++) {
+                            var part = parts[j];
+                            var xi, yi;
+                            switch (part[0]) {
+                                case 'M':
+                                case 'L':
+                                xi = 1;
+                                yi = 2;
+                                break;
+                                case 'A':
+                                xi = part.length - 2;
+                                yi = part.length - 1;
+                                break;
+                                default:
+                                continue;
+                            }
+                            var x = parseFloat(part[xi]);
+                            var y = parseFloat(part[yi]);
+                            if (run == 0) {
+                                minX = Math.min(minX, x);
+                                minY = Math.min(minY, y);
+                                maxX = Math.max(maxX, x);
+                                maxY = Math.max(maxY, y);
+                            } else if (run == 1) {
+                                var dx = (x - minX) / (maxX - minX);
+                                var dy = (y - minY) / (maxY - minY);
+                                x += horizontalSizeIncrease / 2 * (dx < 0.5 ? -1 : 1);
+                                y += verticalSizeIncrease / 2 * (dy < 0.25 ? -1 : 1);
+                                part[xi] = x;
+                                part[yi] = y;
+                            }
+                        }
+                    }
+                    path = parts.map(function(part) { return part.join(' '); }).join(' ');
+                    keyElement.setAttributeNS(null, 'd', path);
+                }
+            }
+        
+            var keyArrowDown = document.querySelector('g[keycode="81"] rect.keyBackground');
+            var keyArrowUp = document.querySelector('g[keycode="82"] rect.keyBackground');
+            if (keyArrowDown && keyArrowUp) {
+                var y1 = parseFloat(keyArrowUp.getAttributeNS(null, 'y'));
+                var h1 = parseFloat(keyArrowUp.getAttributeNS(null, 'height'));
+                var y2 = parseFloat(keyArrowDown.getAttributeNS(null, 'y'));
+                var h2 = parseFloat(keyArrowDown.getAttributeNS(null, 'height'));
+                
+                if (y1 + h1 > y2) {
+                    var overlap = y1 + h1 - y2;
+                    keyArrowUp.setAttributeNS(null, 'height', h1 - overlap / 2);
+                    keyArrowDown.setAttributeNS(null, 'y', y2 + overlap / 2);
+                    keyArrowDown.setAttributeNS(null, 'height', h2 - overlap / 2);
+                }
+            }
+
+            viewBox[1] = parseInt(viewBox[1]) - 1;
+            viewBox[3] = parseInt(viewBox[3]) + 2;
+            svg.setAttributeNS(null, 'viewBox', viewBox.join(' '));
+            
+            svg.setAttributeNS(null, 'preserveAspectRatio', 'none');
+            svg.removeAttributeNS(null, 'width');
+            svg.removeAttributeNS(null, 'height');
+            
+            var textElements = svg.getElementsByTagName('text');
+            for (var i = 0; i < textElements.length; i++) {
+                var textElement = textElements[i];
+                var fontSize = parseInt(textElement.getAttributeNS(null, 'font-size'));
+                textElement.setAttributeNS(null, 'font-size', fontSize - 2);
+            }
+        </script>
+    </body>
+</html>

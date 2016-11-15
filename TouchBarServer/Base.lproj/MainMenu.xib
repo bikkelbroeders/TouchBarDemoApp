@@ -14,8 +14,8 @@
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
             <connections>
                 <outlet property="menu" destination="g4U-gg-VOe" id="liK-bP-HxT"/>
-                <outlet property="remoteBarMenuItem" destination="1Ld-hb-tYP" id="Qdm-Ap-WBd"/>
-                <outlet property="screenBarMenuItem" destination="Ezt-RS-Smo" id="EcL-HZ-rfq"/>
+                <outlet property="remoteSubMenuItem" destination="mtg-2T-DDl" id="m2e-Ex-8lZ"/>
+                <outlet property="screenSubMenuItem" destination="Ezt-RS-Smo" id="tDk-aH-CSj"/>
             </connections>
         </customObject>
         <customObject id="7Lb-xD-dZU" userLabel="StartAtLoginController" customClass="StartAtLoginController">
@@ -25,11 +25,86 @@
         </customObject>
         <menu id="g4U-gg-VOe">
             <items>
-                <menuItem title="On-Screen Touch Bar (Press Fn to Show)" state="on" id="Ezt-RS-Smo">
+                <menuItem title="On-Screen Touch Bar (Press Fn to Show)" id="Ezt-RS-Smo">
                     <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="changeScreenEnable:" target="Voe-Tx-rLC" id="zPV-n7-CDz"/>
+                    </connections>
                 </menuItem>
-                <menuItem title="Allow iOS Touch Bar Clients" state="on" id="1Ld-hb-tYP">
+                <menuItem title="Remote Touch Bar Clients" id="mtg-2T-DDl">
                     <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Remote Touch Bar Clients" id="gPH-Fn-tGn">
+                        <items>
+                            <menuItem title="Enable" id="Sf5-Tn-947">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeRemoteEnable:" target="Voe-Tx-rLC" id="Z9r-Rh-Sgd"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="r9q-Ie-fwO"/>
+                            <menuItem title="Touch Bar Only" id="exF-0c-LjL">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeRemoteMode:" target="Voe-Tx-rLC" id="cDR-tD-8z3"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Keyboard with Touch Bar" tag="1" id="iJN-b8-gkq">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeRemoteMode:" target="Voe-Tx-rLC" id="HtC-bM-F1w"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Demo MacBook Pro" tag="2" id="HHW-dn-QBJ">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeRemoteMode:" target="Voe-Tx-rLC" id="RJJ-lc-gAc"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="13&quot; MacBook Pro" tag="3" id="cZh-Uv-sCq">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeRemoteMode:" target="Voe-Tx-rLC" id="Avz-R2-Q2O"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="13&quot; MacBook Pro (Topcase Only)" tag="4" id="Hse-My-xOs">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeRemoteMode:" target="Voe-Tx-rLC" id="9of-gj-mBn"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="15&quot; MacBook Pro" tag="5" id="0i3-RK-aw2">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeRemoteMode:" target="Voe-Tx-rLC" id="GeP-A2-nZ0"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="15&quot; MacBook Pro (Topcase Only)" tag="6" id="Lrx-MR-cao">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeRemoteMode:" target="Voe-Tx-rLC" id="WRI-qc-2Me"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="3Tn-Ph-ZD3"/>
+                            <menuItem title="Align Top" tag="2" id="oU9-xq-e9v">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeRemoteAlign:" target="Voe-Tx-rLC" id="Lv8-sy-K3G"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Align Center" tag="1" id="dAt-Fn-1Oo">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeRemoteAlign:" target="Voe-Tx-rLC" id="TOU-45-9z8"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Align Bottom" id="L6Y-pj-JvG">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeRemoteAlign:" target="Voe-Tx-rLC" id="6FU-p5-Agf"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="Drp-cd-3aF"/>
                 <menuItem title="Start at Login" id="Wo5-Jg-YiO">

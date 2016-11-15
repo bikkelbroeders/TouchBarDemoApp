@@ -31,5 +31,5 @@ enum {
 - (void)startConnectingToUsbDevices;
 - (void)stopConnectingToUsbDevices;
 - (void)sendMessageToDevice:(NSNumber *)deviceId type:(uint32_t)type data:(NSData *)payload callback:(void(^)(NSError *error))callback;
-- (void)broadcaseMessageOfType:(uint32_t)type data:(NSData *)data callback:(void(^)(NSDictionary *errors))callback;
+- (void)broadcastMessageOfType:(uint32_t)type data:(NSData *)data callback:(void(^)(NSDictionary *errors))callback;
 @end
