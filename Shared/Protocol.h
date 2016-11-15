@@ -49,19 +49,19 @@ typedef struct {
 } MouseEvent;
 
 typedef NS_ENUM(uint64_t, OperatingMode) {
-    OperatingModeTouchBarOnly,
-    OperatingModeKeyboard,
-    OperatingModeDemo1,
-    OperatingModeDemo2,
-    OperatingModeDemo3,
-    OperatingModeDemo4,
-    OperatingModeDemo5,
+    OperatingModeTouchBarOnly   = 0,
+    OperatingModeKeyboard       = 1,
+    OperatingModeDemo1          = 2,
+    OperatingModeDemo2          = 3,
+    OperatingModeDemo3          = 4,
+    OperatingModeDemo4          = 5,
+    OperatingModeDemo5          = 6,
 };
 
 typedef NS_ENUM(uint64_t, Alignment) {
-    AlignmentBottom,
-    AlignmentMiddle,
-    AlignmentTop,
+    AlignmentBottom = 0,
+    AlignmentMiddle = 1,
+    AlignmentTop    = 2,
 };
 
 #endif /* Protocol_h */
