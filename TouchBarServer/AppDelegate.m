@@ -27,9 +27,18 @@ extern BOOL DFRSetStatus(int);
 extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p);
 
 static NSString * const kUserDefaultsKeyScreenEnable    = @"ScreenEnable";
+static NSString * const kUserDefaultsKeyScreenToggleKey = @"ScreenToggleKey";
 static NSString * const kUserDefaultsKeyRemoteEnable    = @"RemoteEnable";
 static NSString * const kUserDefaultsKeyRemoteMode      = @"RemoteMode";
 static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
+
+typedef NS_ENUM(NSInteger, ToggleKey) {
+    ToggleKeyFn         = 0,
+    ToggleKeyShift      = 1,
+    ToggleKeyCommand    = 2,
+    ToggleKeyControl    = 3,
+    ToggleKeyOption     = 4,
+};
 
 @interface AppDelegate () <UsbDeviceControllerDelegate>
 
@@ -40,6 +49,7 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
 
 // Settings
 @property (nonatomic, assign) BOOL screenEnable;
+@property (nonatomic, assign) ToggleKey screenToggleKey;
 @property (nonatomic, assign) BOOL remoteEnable;
 @property (nonatomic, assign) OperatingMode remoteMode;
 @property (nonatomic, assign) Alignment remoteAlign;
@@ -54,7 +64,7 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
     UsbDeviceController *_usbDeviceController;
     
     NSEventModifierFlags _modifierFlags;
-    BOOL _couldBeSoleFnKeyPress;
+    BOOL _couldBeSoleToggleKeyPress;
     
     NSInteger _lastMacKeyCodeDown;
     NSMutableSet *_keysDown;
@@ -92,6 +102,7 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:@{
                                                               kUserDefaultsKeyScreenEnable: @YES,
+                                                              kUserDefaultsKeyScreenToggleKey: @(ToggleKeyFn),
                                                               kUserDefaultsKeyRemoteEnable: @YES,
                                                               kUserDefaultsKeyRemoteMode: @(OperatingModeDemo1),
                                                               kUserDefaultsKeyRemoteAlign: @(AlignmentBottom),
@@ -99,6 +110,9 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
 
     _screenEnable = NO;
     self.screenEnable = [[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKeyScreenEnable];
+    
+    _screenToggleKey = -1;
+    self.screenToggleKey = [[NSUserDefaults standardUserDefaults] integerForKey:kUserDefaultsKeyScreenToggleKey];
     
     _remoteEnable = NO;
     self.remoteEnable = [[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKeyRemoteEnable];
@@ -127,8 +141,25 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
         [[NSUserDefaults standardUserDefaults] synchronize];
 
         _screenSubMenuItem.state = _screenEnable ? 1 : 0;
+        for (NSMenuItem *menuItem in _screenSubMenuItem.submenu.itemArray) {
+            if (menuItem.action != @selector(changeScreenEnable:)) continue;
+            menuItem.state = _screenEnable ? 1 : 0;
+        }
 
         [_touchBarWindow setIsVisible:NO];
+    }
+}
+
+- (void)setScreenToggleKey:(ToggleKey)screenToggleKey {
+    if (_screenToggleKey != screenToggleKey) {
+        _screenToggleKey = screenToggleKey;
+        [[NSUserDefaults standardUserDefaults] setObject:@(_screenToggleKey) forKey:kUserDefaultsKeyScreenToggleKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        for (NSMenuItem *menuItem in _screenSubMenuItem.submenu.itemArray) {
+            if (menuItem.action != @selector(changeScreenToggleKey:)) continue;
+            menuItem.state = menuItem.tag == _screenToggleKey ? 1 : 0;
+        }
     }
 }
 
@@ -186,6 +217,10 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
 
 - (IBAction)changeScreenEnable:(NSMenuItem *)sender {
     self.screenEnable = (sender.state == 0);
+}
+
+- (IBAction)changeScreenToggleKey:(NSMenuItem *)sender {
+    self.screenToggleKey = (ToggleKey)sender.tag;
 }
 
 - (IBAction)changeRemoteEnable:(NSMenuItem *)sender {
@@ -680,6 +715,35 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
     return keyEvent;
 }
 
+- (CGKeyCode)toggleKeyKeyCode {
+    switch (_screenToggleKey) {
+        case ToggleKeyFn:
+            return kVK_Function;
+        case ToggleKeyShift:
+            return kVK_Shift;
+        case ToggleKeyCommand:
+            return kVK_Command;
+        case ToggleKeyControl:
+            return kVK_Control;
+        case ToggleKeyOption:
+            return kVK_Option;
+    }
+}
+
+- (NSEventModifierFlags)toggleKeyModifierFlag {
+    switch (_screenToggleKey) {
+        case ToggleKeyFn:
+            return NSEventModifierFlagFunction;
+        case ToggleKeyShift:
+            return NSEventModifierFlagShift;
+        case ToggleKeyCommand:
+            return NSEventModifierFlagCommand;
+        case ToggleKeyControl:
+            return NSEventModifierFlagControl;
+        case ToggleKeyOption:
+            return NSEventModifierFlagOption;
+    }
+}
 
 - (void)keyEvent:(NSEvent *)event {
     KeyEvent keyEvent = [self keyEventFromEvent:event];
@@ -720,27 +784,27 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
     if (_screenEnable) {
         switch(event.type) {
             case NSEventTypeKeyDown:
-                _couldBeSoleFnKeyPress = NO;
+                _couldBeSoleToggleKeyPress = NO;
                 break;
                 
             case NSEventTypeKeyUp:
-                _couldBeSoleFnKeyPress = NO;
+                _couldBeSoleToggleKeyPress = NO;
                 break;
                 
             case NSEventTypeFlagsChanged: {
-                BOOL fnKeyWasDown = (_modifierFlags & NSFunctionKeyMask) != 0;
-                BOOL fnKeyIsDown = (event.modifierFlags & NSFunctionKeyMask) != 0;
+                BOOL toggleKeyWasDown = (_modifierFlags & [self toggleKeyModifierFlag]) != 0;
+                BOOL toggleKeyIsDown = (event.modifierFlags & [self toggleKeyModifierFlag]) != 0;
                 
-                if(fnKeyIsDown != fnKeyWasDown) {
+                if(toggleKeyIsDown != toggleKeyWasDown) {
                     KeyMap keymap;
                     CGSGetKeys(keymap);
-                    if (fnKeyIsDown) {
-                        _couldBeSoleFnKeyPress = [self isOnlyKeyPressed:kVK_Function inKeyMap:&keymap];
-                    } else if (_couldBeSoleFnKeyPress && [self isAnyKeyPressedInKeyMap:&keymap] == NO) {
+                    if (toggleKeyIsDown) {
+                        _couldBeSoleToggleKeyPress = [self isOnlyKeyPressed:[self toggleKeyKeyCode] inKeyMap:&keymap];
+                    } else if (_couldBeSoleToggleKeyPress && [self isAnyKeyPressedInKeyMap:&keymap] == NO) {
                         [self toggleTouchBarWindow];
                     }
                 } else {
-                    _couldBeSoleFnKeyPress = NO;
+                    _couldBeSoleToggleKeyPress = NO;
                 }
             }
                 

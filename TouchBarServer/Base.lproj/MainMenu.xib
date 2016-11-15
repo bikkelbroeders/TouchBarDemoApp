@@ -15,7 +15,7 @@
             <connections>
                 <outlet property="menu" destination="g4U-gg-VOe" id="liK-bP-HxT"/>
                 <outlet property="remoteSubMenuItem" destination="mtg-2T-DDl" id="m2e-Ex-8lZ"/>
-                <outlet property="screenSubMenuItem" destination="Ezt-RS-Smo" id="tDk-aH-CSj"/>
+                <outlet property="screenSubMenuItem" destination="KcS-Cb-lkh" id="LXA-ay-P5q"/>
             </connections>
         </customObject>
         <customObject id="7Lb-xD-dZU" userLabel="StartAtLoginController" customClass="StartAtLoginController">
@@ -25,11 +25,49 @@
         </customObject>
         <menu id="g4U-gg-VOe">
             <items>
-                <menuItem title="On-Screen Touch Bar (Press Fn to Show)" id="Ezt-RS-Smo">
+                <menuItem title="On-Screen Touch Bar" id="KcS-Cb-lkh">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="changeScreenEnable:" target="Voe-Tx-rLC" id="zPV-n7-CDz"/>
-                    </connections>
+                    <menu key="submenu" title="On-Screen Touch Bar" id="kAA-3N-SJm">
+                        <items>
+                            <menuItem title="Enable" id="2b3-Dx-VuV">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeScreenEnable:" target="Voe-Tx-rLC" id="Glh-KI-rs4"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="5Gd-gZ-jHc"/>
+                            <menuItem title="Toggle with Fn" id="rno-ZZ-p9m">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeScreenToggleKey:" target="Voe-Tx-rLC" id="Zcz-ui-rVB"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Toggle with ⇧" tag="1" id="elr-Zp-Xsf">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeScreenToggleKey:" target="Voe-Tx-rLC" id="msa-v5-Wme"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Toggle with ⌘" tag="2" id="yzK-lD-dnl">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeScreenToggleKey:" target="Voe-Tx-rLC" id="GkZ-OV-4xd"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Toggle with ⌃" tag="3" id="6wo-6b-cfZ">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeScreenToggleKey:" target="Voe-Tx-rLC" id="N8Q-b1-ygz"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Toggle with ⌥" tag="4" id="qvk-Kb-nGv">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeScreenToggleKey:" target="Voe-Tx-rLC" id="k0B-ny-Zcv"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
                 </menuItem>
                 <menuItem title="Remote Touch Bar Clients" id="mtg-2T-DDl">
                     <modifierMask key="keyEquivalentModifierMask"/>
