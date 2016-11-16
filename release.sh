@@ -34,18 +34,21 @@ set -x
 # Put new version in the app plist
 plutil -replace CFBundleShortVersionString -string "${version}" "${app}/Info.plist"
 
-# Build release app
-xcodebuild -quiet -project "${project}" -target "${app}" -configuration Release
+# Build release archive
+xcodebuild -quiet -project "${project}" -archivePath "${app}" -scheme "${app}" archive
 
 # Zip the app
-cd build/Release
-zip -q -r "${app}.zip" "${app}.app"
-mv "${app}.zip" ../../
-cd ../../
+zip=`pwd`"/${app}.zip"
+pushd "${app}.xcarchive/Products/Applications" > /dev/null
+zip -q -r "${zip}" "${app}.app"
+popd > /dev/null
 
 # Store the dSYM for debugging
 rm -Rf "Debug/${app}.app.dSYM"
-mv "build/Release/${app}.app.dSYM" Debug/
+mv "${app}.xcarchive/dSYMs/${app}.app.dSYM" Debug/
+
+# Remove the created archive
+rm -Rf "${app}.xcarchive"
 
 # Make a release commit + tag
 git add Debug/
