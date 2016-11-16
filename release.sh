@@ -14,14 +14,14 @@ then
     exit 1
 fi
 
-version="${1}"
+plist=`pwd`"/${app}/Info"
+previous_version=`defaults read "${plist}" CFBundleShortVersionString`
 
+version="${1}"
 if [ -z "${version}" ]
 then
-    plist=`pwd`/${app}/Info
-    version=`defaults read "${plist}" CFBundleShortVersionString`
-    major=`echo "${version}" | cut -d. -f1`
-    minor=`echo "${version}" | cut -d. -f2`
+    major=`echo "${previous_version}" | cut -d. -f1`
+    minor=`echo "${previous_version}" | cut -d. -f2`
     minor=`echo ${minor}+1 | bc`
     version="${major}.${minor}"
 fi
@@ -61,6 +61,9 @@ set +x
 # Print info
 echo
 echo "Finished creating release v${version} !"
+echo
+echo "Changes:"
+git log "v${previous_version}..v${version}^" --oneline
 echo
 echo "To publish this release:"
 echo "  git push -u origin master --tags"
