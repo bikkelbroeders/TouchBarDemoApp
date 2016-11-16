@@ -358,6 +358,13 @@ typedef NS_ENUM(NSInteger, ToggleKey) {
     
     TISInputSourceRef currentKeyboard = TISCopyCurrentKeyboardInputSource();
     CFDataRef layoutData = TISGetInputSourceProperty(currentKeyboard, kTISPropertyUnicodeKeyLayoutData);
+
+    if (!layoutData) {
+        CFRelease(currentKeyboard);
+        currentKeyboard = TISCopyCurrentASCIICapableKeyboardLayoutInputSource();
+        layoutData = TISGetInputSourceProperty(currentKeyboard, kTISPropertyUnicodeKeyLayoutData);
+    }
+
     const UCKeyboardLayout *keyboardLayout = (const UCKeyboardLayout *)CFDataGetBytePtr(layoutData);
     
     UInt8 keyboardType = LMGetKbdType();
