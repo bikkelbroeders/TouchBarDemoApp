@@ -47,7 +47,7 @@ CG_EXTERN CGError CGSSetBackgroundEventMask(CGSConnectionID cid, CGEventFlags ma
 }
 
 - (void)sendEvent:(NSEvent *)event {
-    if (!self.keyWindow && ((1 << event.type) & _globalEventMask)) {
+    if (!event.window && ((1 << event.type) & _globalEventMask)) {
         return;
     }
     
