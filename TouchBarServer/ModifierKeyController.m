@@ -78,10 +78,13 @@ CG_EXTERN void CGSGetKeys(KeyMap keymap);
 - (void)processEvent:(NSEvent *)event {
     if (_enabled) {
         switch(event.type) {
+            case NSEventTypeLeftMouseDown:
+            case NSEventTypeLeftMouseUp:
+            case NSEventTypeRightMouseDown:
+            case NSEventTypeRightMouseUp:
+            case NSEventTypeOtherMouseDown:
+            case NSEventTypeOtherMouseUp:
             case NSEventTypeKeyDown:
-                _couldBeSoleModifierKeyPress = NO;
-                break;
-                
             case NSEventTypeKeyUp:
                 _couldBeSoleModifierKeyPress = NO;
                 break;

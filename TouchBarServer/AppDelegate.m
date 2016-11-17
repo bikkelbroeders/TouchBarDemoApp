@@ -82,8 +82,11 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
 
     
     GlobalEventApplication *app = [NSApplication sharedApplication];
-    app.globalEventMask = NSKeyDownMask | NSKeyUpMask | NSFlagsChangedMask;
-    
+    app.globalEventMask = NSKeyDownMask | NSKeyUpMask | NSFlagsChangedMask |
+        NSLeftMouseDownMask | NSLeftMouseUpMask |
+        NSRightMouseDownMask | NSRightMouseUpMask |
+        NSOtherMouseDownMask | NSOtherMouseUpMask;
+
     _modifierKeyController = [[ModifierKeyController alloc] init];
     _modifierKeyController.delegate = self;
     
