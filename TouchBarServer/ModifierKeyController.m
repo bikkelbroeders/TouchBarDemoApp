@@ -104,9 +104,8 @@ static const NSTimeInterval kModifierKeyPressMaxDuration = 0.3;
                     CGSGetKeys(keymap);
                     if (toggleKeyIsDown) {
                         _couldBeSoleModifierKeyPress = [self isOnlyKeyPressed:[self modifierKeyCode] inKeyMap:&keymap];
-                        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(pressedTooLong) object:nil];
-                        [self performSelector:@selector(pressedTooLong) withObject:nil afterDelay:kModifierKeyPressMaxDuration];
                     } else if (_couldBeSoleModifierKeyPress && [self isAnyKeyPressedInKeyMap:&keymap] == NO) {
+                        _couldBeSoleModifierKeyPress = NO;
                         if ([_delegate respondsToSelector:@selector(didPressModifierKey)]) {
                             [_delegate didPressModifierKey];
                         }
@@ -118,6 +117,11 @@ static const NSTimeInterval kModifierKeyPressMaxDuration = 0.3;
                 
             default:
                 break;
+        }
+
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(pressedTooLong) object:nil];
+        if (_couldBeSoleModifierKeyPress) {
+            [self performSelector:@selector(pressedTooLong) withObject:nil afterDelay:kModifierKeyPressMaxDuration];
         }
     }
     

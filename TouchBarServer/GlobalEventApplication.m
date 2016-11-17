@@ -12,11 +12,12 @@
 
 typedef int CGSConnectionID;
 CG_EXTERN CGSConnectionID CGSMainConnectionID(void);
-CG_EXTERN void CGSGetBackgroundEventMask(CGSConnectionID cid, CGEventFlags *outMask);
-CG_EXTERN CGError CGSSetBackgroundEventMask(CGSConnectionID cid, CGEventFlags mask);
+CG_EXTERN void CGSGetBackgroundEventMask(CGSConnectionID cid, int *outMask);
+CG_EXTERN CGError CGSSetBackgroundEventMask(CGSConnectionID cid, int mask);
 
 @implementation GlobalEventApplication {
-    CGEventFlags _defaultBackgroundEventMask;
+    int _defaultBackgroundEventMask;
+    NSTimer *_timer;
 }
 
 - (instancetype)init {
@@ -28,11 +29,25 @@ CG_EXTERN CGError CGSSetBackgroundEventMask(CGSConnectionID cid, CGEventFlags ma
     return self;
 }
 
-- (void)setGlobalEventMask:(NSEventMask)globalEventMask {
+- (void)updateBackgroundEventMask {
+    CGSConnectionID connectionId = CGSMainConnectionID();
+    int mask;
+    CGSGetBackgroundEventMask(connectionId, &mask);
+    if (mask != (_defaultBackgroundEventMask | _globalEventMask)) {
+        CGSSetBackgroundEventMask(connectionId, _defaultBackgroundEventMask | _globalEventMask);
+    }
+}
+
+- (void)setGlobalEventMask:(int)globalEventMask {
     if (_globalEventMask != globalEventMask) {
         _globalEventMask = globalEventMask;
-        CGSConnectionID connectionId = CGSMainConnectionID();
-        CGSSetBackgroundEventMask(connectionId, _defaultBackgroundEventMask | _globalEventMask);
+        [self updateBackgroundEventMask];
+
+        if (_timer) {
+            [_timer invalidate];
+            _timer = nil;
+        }
+        _timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateBackgroundEventMask) userInfo:nil repeats:YES];
     }
 }
 

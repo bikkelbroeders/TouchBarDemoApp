@@ -10,6 +10,6 @@
 
 @interface GlobalEventApplication : NSApplication
 
-@property (nonatomic, assign) NSEventMask globalEventMask;
+@property (nonatomic, assign) int globalEventMask;
 
 @end
