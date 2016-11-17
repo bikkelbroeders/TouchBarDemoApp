@@ -13,6 +13,8 @@
 
 CG_EXTERN void CGSGetKeys(KeyMap keymap);
 
+static const NSTimeInterval kModifierKeyPressMaxDuration = 0.3;
+
 @implementation ModifierKeyController {
     BOOL _couldBeSoleModifierKeyPress;
     NSEventModifierFlags _modifierFlags;
@@ -75,6 +77,10 @@ CG_EXTERN void CGSGetKeys(KeyMap keymap);
     }
 }
 
+- (void)pressedTooLong {
+    _couldBeSoleModifierKeyPress = NO;
+}
+
 - (void)processEvent:(NSEvent *)event {
     if (_enabled) {
         switch(event.type) {
@@ -98,6 +104,8 @@ CG_EXTERN void CGSGetKeys(KeyMap keymap);
                     CGSGetKeys(keymap);
                     if (toggleKeyIsDown) {
                         _couldBeSoleModifierKeyPress = [self isOnlyKeyPressed:[self modifierKeyCode] inKeyMap:&keymap];
+                        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(pressedTooLong) object:nil];
+                        [self performSelector:@selector(pressedTooLong) withObject:nil afterDelay:kModifierKeyPressMaxDuration];
                     } else if (_couldBeSoleModifierKeyPress && [self isAnyKeyPressedInKeyMap:&keymap] == NO) {
                         if ([_delegate respondsToSelector:@selector(didPressModifierKey)]) {
                             [_delegate didPressModifierKey];
