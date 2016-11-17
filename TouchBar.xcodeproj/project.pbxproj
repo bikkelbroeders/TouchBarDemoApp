@@ -17,6 +17,7 @@
 		5E46ED291DD286E50011B72C /* Keyboard.html in Resources */ = {isa = PBXBuildFile; fileRef = 5E46ED281DD286E50011B72C /* Keyboard.html */; };
 		5E6AA4621DCAA65B00B804EC /* DFRFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E6AA4601DCAA65B00B804EC /* DFRFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		5E6AA4631DCAA65B00B804EC /* SkyLight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E6AA4611DCAA65B00B804EC /* SkyLight.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		5E6F8A361DDD0FD500E2463B /* ModifierKeyController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E6F8A351DDD0FD500E2463B /* ModifierKeyController.m */; };
 		5EAC86FC1DCA8B83001BB8AC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC86FB1DCA8B83001BB8AC /* main.m */; };
 		5EAC86FF1DCA8B83001BB8AC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC86FE1DCA8B83001BB8AC /* AppDelegate.m */; };
 		5EAC87021DCA8B83001BB8AC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC87011DCA8B83001BB8AC /* ViewController.m */; };
@@ -29,7 +30,7 @@
 		5EAC87211DCA8BAD001BB8AC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5EAC871F1DCA8BAD001BB8AC /* MainMenu.xib */; };
 		5EC06EB91DCFCF4200A7AA57 /* UsbDeviceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EC06EB81DCFCF4200A7AA57 /* UsbDeviceController.m */; };
 		5EC478651DCBD51200C06ED1 /* TouchBarServer Helper.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5E19C5151DCB94BF00DA3CB1 /* TouchBarServer Helper.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		5EE8BF561DD0D68A00AA074F /* Application.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EE8BF551DD0D68A00AA074F /* Application.m */; };
+		5EE8BF561DD0D68A00AA074F /* GlobalEventApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EE8BF551DD0D68A00AA074F /* GlobalEventApplication.m */; };
 		5EF078601DCA8CC400BD69DA /* PTChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF078581DCA8CC400BD69DA /* PTChannel.m */; };
 		5EF078611DCA8CC400BD69DA /* PTChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF078581DCA8CC400BD69DA /* PTChannel.m */; };
 		5EF078621DCA8CC400BD69DA /* PTProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF0785B1DCA8CC400BD69DA /* PTProtocol.m */; };
@@ -80,6 +81,8 @@
 		5E46ED281DD286E50011B72C /* Keyboard.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Keyboard.html; sourceTree = "<group>"; };
 		5E6AA4601DCAA65B00B804EC /* DFRFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DFRFoundation.framework; path = ../../../../System/Library/PrivateFrameworks/DFRFoundation.framework; sourceTree = "<group>"; };
 		5E6AA4611DCAA65B00B804EC /* SkyLight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SkyLight.framework; path = ../../../../System/Library/PrivateFrameworks/SkyLight.framework; sourceTree = "<group>"; };
+		5E6F8A341DDD0FD500E2463B /* ModifierKeyController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModifierKeyController.h; sourceTree = "<group>"; };
+		5E6F8A351DDD0FD500E2463B /* ModifierKeyController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModifierKeyController.m; sourceTree = "<group>"; };
 		5E7EB02A1DCA91AD00C2B09A /* Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Protocol.h; sourceTree = "<group>"; };
 		5EA688171DD3FBC1005253EC /* Keyboard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Keyboard.h; sourceTree = "<group>"; };
 		5EAC86F71DCA8B83001BB8AC /* TouchBarClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TouchBarClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,8 +104,8 @@
 		5EAC87221DCA8BAD001BB8AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5EC06EB71DCFCF4200A7AA57 /* UsbDeviceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsbDeviceController.h; sourceTree = "<group>"; };
 		5EC06EB81DCFCF4200A7AA57 /* UsbDeviceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UsbDeviceController.m; sourceTree = "<group>"; };
-		5EE8BF541DD0D68A00AA074F /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Application.h; sourceTree = "<group>"; };
-		5EE8BF551DD0D68A00AA074F /* Application.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Application.m; sourceTree = "<group>"; };
+		5EE8BF541DD0D68A00AA074F /* GlobalEventApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalEventApplication.h; sourceTree = "<group>"; };
+		5EE8BF551DD0D68A00AA074F /* GlobalEventApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalEventApplication.m; sourceTree = "<group>"; };
 		5EF078551DCA8CC400BD69DA /* Peertalk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peertalk.h; sourceTree = "<group>"; };
 		5EF078561DCA8CC400BD69DA /* prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = "<group>"; };
 		5EF078571DCA8CC400BD69DA /* PTChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTChannel.h; sourceTree = "<group>"; };
@@ -222,10 +225,12 @@
 			children = (
 				5EAC87171DCA8BAC001BB8AC /* AppDelegate.h */,
 				5EAC87181DCA8BAC001BB8AC /* AppDelegate.m */,
-				5EE8BF541DD0D68A00AA074F /* Application.h */,
-				5EE8BF551DD0D68A00AA074F /* Application.m */,
+				5EE8BF541DD0D68A00AA074F /* GlobalEventApplication.h */,
+				5EE8BF551DD0D68A00AA074F /* GlobalEventApplication.m */,
 				5E46ED1A1DD214A50011B72C /* KeyboardKey.h */,
 				5E46ED1B1DD214A50011B72C /* KeyboardKey.m */,
+				5E6F8A341DDD0FD500E2463B /* ModifierKeyController.h */,
+				5E6F8A351DDD0FD500E2463B /* ModifierKeyController.m */,
 				5E19C50E1DCB947B00DA3CB1 /* StartAtLoginController.h */,
 				5E19C50F1DCB947B00DA3CB1 /* StartAtLoginController.m */,
 				5E229F071DD7A90800388015 /* TouchBarView.h */,
@@ -443,7 +448,8 @@
 				5E229F091DD7A90800388015 /* TouchBarView.m in Sources */,
 				5E229F061DD7A8EC00388015 /* TouchBarWindow.m in Sources */,
 				5EF078611DCA8CC400BD69DA /* PTChannel.m in Sources */,
-				5EE8BF561DD0D68A00AA074F /* Application.m in Sources */,
+				5E6F8A361DDD0FD500E2463B /* ModifierKeyController.m in Sources */,
+				5EE8BF561DD0D68A00AA074F /* GlobalEventApplication.m in Sources */,
 				5EF078651DCA8CC400BD69DA /* PTUSBHub.m in Sources */,
 				5EAC87191DCA8BAC001BB8AC /* AppDelegate.m in Sources */,
 				5E46ED1C1DD214A50011B72C /* KeyboardKey.m in Sources */,

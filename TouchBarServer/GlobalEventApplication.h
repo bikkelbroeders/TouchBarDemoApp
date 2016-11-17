@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface Application : NSApplication
+@interface GlobalEventApplication : NSApplication
+
+@property (nonatomic, assign) NSEventMask globalEventMask;
 
 @end

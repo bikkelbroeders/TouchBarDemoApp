@@ -10,7 +10,7 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
-- (void)keyEvent:(NSEvent *)event;
+- (void)globalEvent:(NSEvent *)event;
 
 @end
 

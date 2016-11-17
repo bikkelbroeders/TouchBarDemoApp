@@ -8,19 +8,17 @@
 
 #import "AppDelegate.h"
 
+#import "GlobalEventApplication.h"
 #import "KeyboardKey.h"
 #import "Keyboard.h"
+#import "ModifierKeyController.h"
 #import "Protocol.h"
 #import "TouchBarWindow.h"
 #import "UsbDeviceController.h"
 
 @import Carbon;
 
-typedef int CGSConnectionID;
 CG_EXTERN void CGSGetKeys(KeyMap keymap);
-CG_EXTERN CGSConnectionID CGSMainConnectionID(void);
-CG_EXTERN void CGSGetBackgroundEventMask(CGSConnectionID cid, CGEventFlags *outMask);
-CG_EXTERN CGError CGSSetBackgroundEventMask(CGSConnectionID cid, CGEventFlags mask);
 
 extern CGDisplayStreamRef SLSDFRDisplayStreamCreate(void *, dispatch_queue_t, CGDisplayStreamFrameAvailableHandler);
 extern BOOL DFRSetStatus(int);
@@ -32,15 +30,7 @@ static NSString * const kUserDefaultsKeyRemoteEnable    = @"RemoteEnable";
 static NSString * const kUserDefaultsKeyRemoteMode      = @"RemoteMode";
 static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
 
-typedef NS_ENUM(NSInteger, ToggleKey) {
-    ToggleKeyFn         = 0,
-    ToggleKeyShift      = 1,
-    ToggleKeyCommand    = 2,
-    ToggleKeyControl    = 3,
-    ToggleKeyOption     = 4,
-};
-
-@interface AppDelegate () <UsbDeviceControllerDelegate>
+@interface AppDelegate () <ModifierKeyControllerDelegate, UsbDeviceControllerDelegate>
 
 @property (weak) IBOutlet NSWindow *window;
 @property (weak) IBOutlet NSMenu *menu;
@@ -49,7 +39,7 @@ typedef NS_ENUM(NSInteger, ToggleKey) {
 
 // Settings
 @property (nonatomic, assign) BOOL screenEnable;
-@property (nonatomic, assign) ToggleKey screenToggleKey;
+@property (nonatomic, assign) ModifierKey screenToggleKey;
 @property (nonatomic, assign) BOOL remoteEnable;
 @property (nonatomic, assign) OperatingMode remoteMode;
 @property (nonatomic, assign) Alignment remoteAlign;
@@ -60,11 +50,12 @@ typedef NS_ENUM(NSInteger, ToggleKey) {
     NSStatusItem *_statusItem;
     TouchBarWindow* _touchBarWindow;
     
+    ModifierKeyController *_modifierKeyController;
+
     CGDisplayStreamRef _stream;
     UsbDeviceController *_usbDeviceController;
     
     NSEventModifierFlags _modifierFlags;
-    BOOL _couldBeSoleToggleKeyPress;
     
     NSInteger _lastMacKeyCodeDown;
     NSMutableSet *_keysDown;
@@ -89,10 +80,12 @@ typedef NS_ENUM(NSInteger, ToggleKey) {
     
     _keysDown = [NSMutableSet new];
 
-    CGSConnectionID connectionId = CGSMainConnectionID();
-    CGEventFlags backgroundEventMask;
-    CGSGetBackgroundEventMask(connectionId, &backgroundEventMask);
-    CGSSetBackgroundEventMask(connectionId, backgroundEventMask | NSKeyDownMask | NSKeyUpMask | NSFlagsChangedMask);
+    
+    GlobalEventApplication *app = [NSApplication sharedApplication];
+    app.globalEventMask = NSKeyDownMask | NSKeyUpMask | NSFlagsChangedMask;
+    
+    _modifierKeyController = [[ModifierKeyController alloc] init];
+    _modifierKeyController.delegate = self;
     
     _usbDeviceController = [[UsbDeviceController alloc] initWithPort:kProtocolPort];
     _usbDeviceController.delegate = self;
@@ -102,7 +95,7 @@ typedef NS_ENUM(NSInteger, ToggleKey) {
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:@{
                                                               kUserDefaultsKeyScreenEnable: @YES,
-                                                              kUserDefaultsKeyScreenToggleKey: @(ToggleKeyFn),
+                                                              kUserDefaultsKeyScreenToggleKey: @(ModifierKeyFn),
                                                               kUserDefaultsKeyRemoteEnable: @YES,
                                                               kUserDefaultsKeyRemoteMode: @(OperatingModeDemo1),
                                                               kUserDefaultsKeyRemoteAlign: @(AlignmentBottom),
@@ -147,10 +140,11 @@ typedef NS_ENUM(NSInteger, ToggleKey) {
         }
 
         [_touchBarWindow setIsVisible:NO];
+        _modifierKeyController.enabled = YES;
     }
 }
 
-- (void)setScreenToggleKey:(ToggleKey)screenToggleKey {
+- (void)setScreenToggleKey:(ModifierKey)screenToggleKey {
     if (_screenToggleKey != screenToggleKey) {
         _screenToggleKey = screenToggleKey;
         [[NSUserDefaults standardUserDefaults] setObject:@(_screenToggleKey) forKey:kUserDefaultsKeyScreenToggleKey];
@@ -160,6 +154,8 @@ typedef NS_ENUM(NSInteger, ToggleKey) {
             if (menuItem.action != @selector(changeScreenToggleKey:)) continue;
             menuItem.state = menuItem.tag == _screenToggleKey ? 1 : 0;
         }
+        
+        _modifierKeyController.modifierKey = _screenToggleKey;
     }
 }
 
@@ -220,7 +216,7 @@ typedef NS_ENUM(NSInteger, ToggleKey) {
 }
 
 - (IBAction)changeScreenToggleKey:(NSMenuItem *)sender {
-    self.screenToggleKey = (ToggleKey)sender.tag;
+    self.screenToggleKey = (ModifierKey)sender.tag;
 }
 
 - (IBAction)changeRemoteEnable:(NSMenuItem *)sender {
@@ -233,6 +229,10 @@ typedef NS_ENUM(NSInteger, ToggleKey) {
 
 - (IBAction)changeRemoteAlign:(NSMenuItem *)sender {
     self.remoteAlign = (Alignment)sender.tag;
+}
+
+- (void)didPressModifierKey {
+    [self toggleTouchBarWindow];
 }
 
 - (NSArray<KeyboardKey*>*)createKeyboardKeys {
@@ -637,29 +637,6 @@ typedef NS_ENUM(NSInteger, ToggleKey) {
     return ((*keymap)[element].bigEndianValue & mask) != 0;
 }
 
-- (BOOL)isOnlyKeyPressed:(CGKeyCode)key inKeyMap:(KeyMap *)keymap {
-    unsigned char element = key / 32;
-    UInt32 mask = 1 << (key % 32);
-    for (unsigned char i = 0; i < 4; i++) {
-        if (i == element) {
-            if ((*keymap)[i].bigEndianValue != mask) return NO;
-        } else {
-            if ((*keymap)[i].bigEndianValue != 0) return NO;
-        }
-    }
-    
-    return YES;
-}
-
-- (BOOL)isAnyKeyPressedInKeyMap:(KeyMap *)keymap {
-    return !(
-             (*keymap)[0].bigEndianValue == 0 &&
-             (*keymap)[1].bigEndianValue == 0 &&
-             (*keymap)[2].bigEndianValue == 0 &&
-             (*keymap)[3].bigEndianValue == 0
-             );
-}
-
 - (NSDictionary *)modifierFlagMapping {
     static NSDictionary *mapping = nil;
     if (mapping == nil) {
@@ -722,37 +699,7 @@ typedef NS_ENUM(NSInteger, ToggleKey) {
     return keyEvent;
 }
 
-- (CGKeyCode)toggleKeyKeyCode {
-    switch (_screenToggleKey) {
-        case ToggleKeyFn:
-            return kVK_Function;
-        case ToggleKeyShift:
-            return kVK_Shift;
-        case ToggleKeyCommand:
-            return kVK_Command;
-        case ToggleKeyControl:
-            return kVK_Control;
-        case ToggleKeyOption:
-            return kVK_Option;
-    }
-}
-
-- (NSEventModifierFlags)toggleKeyModifierFlag {
-    switch (_screenToggleKey) {
-        case ToggleKeyFn:
-            return NSEventModifierFlagFunction;
-        case ToggleKeyShift:
-            return NSEventModifierFlagShift;
-        case ToggleKeyCommand:
-            return NSEventModifierFlagCommand;
-        case ToggleKeyControl:
-            return NSEventModifierFlagControl;
-        case ToggleKeyOption:
-            return NSEventModifierFlagOption;
-    }
-}
-
-- (void)keyEvent:(NSEvent *)event {
+- (void)globalEvent:(NSEvent *)event {
     KeyEvent keyEvent = [self keyEventFromEvent:event];
     NSData* data = [NSData dataWithBytes:&keyEvent length:sizeof(keyEvent)];
     [_usbDeviceController broadcastMessageOfType:ProtocolFrameTypeServerSystemKeyEvent data:data callback:^(NSDictionary *errors) {}];
@@ -769,7 +716,7 @@ typedef NS_ENUM(NSInteger, ToggleKey) {
                         CGKeyCode key = [keyDown integerValue];
                         if (![self isKeyPressed:key inKeyMap:&keymap]) {
                             NSEvent *event = [NSEvent keyEventWithType:NSEventTypeKeyUp location:NSZeroPoint modifierFlags:_modifierFlags timestamp:0 windowNumber:0 context:nil characters:@"" charactersIgnoringModifiers:@"" isARepeat:NO keyCode:key];
-                            [self keyEvent:event];
+                            [self globalEvent:event];
                         }
                     }
                 }];
@@ -788,38 +735,8 @@ typedef NS_ENUM(NSInteger, ToggleKey) {
             break;
     }
     
-    if (_screenEnable) {
-        switch(event.type) {
-            case NSEventTypeKeyDown:
-                _couldBeSoleToggleKeyPress = NO;
-                break;
-                
-            case NSEventTypeKeyUp:
-                _couldBeSoleToggleKeyPress = NO;
-                break;
-                
-            case NSEventTypeFlagsChanged: {
-                BOOL toggleKeyWasDown = (_modifierFlags & [self toggleKeyModifierFlag]) != 0;
-                BOOL toggleKeyIsDown = (event.modifierFlags & [self toggleKeyModifierFlag]) != 0;
-                
-                if(toggleKeyIsDown != toggleKeyWasDown) {
-                    KeyMap keymap;
-                    CGSGetKeys(keymap);
-                    if (toggleKeyIsDown) {
-                        _couldBeSoleToggleKeyPress = [self isOnlyKeyPressed:[self toggleKeyKeyCode] inKeyMap:&keymap];
-                    } else if (_couldBeSoleToggleKeyPress && [self isAnyKeyPressedInKeyMap:&keymap] == NO) {
-                        [self toggleTouchBarWindow];
-                    }
-                } else {
-                    _couldBeSoleToggleKeyPress = NO;
-                }
-            }
-                
-            default:
-                break;
-        }
-    }
-    
+    [_modifierKeyController processEvent:event];
+
     if (event.type == NSFlagsChanged) {
         _modifierFlags = (event.modifierFlags & NSDeviceIndependentModifierFlagsMask);
     }
