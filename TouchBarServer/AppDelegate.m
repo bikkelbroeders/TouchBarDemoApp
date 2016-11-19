@@ -18,8 +18,6 @@
 
 @import Carbon;
 
-CG_EXTERN void CGSGetKeys(KeyMap keymap);
-
 extern CGDisplayStreamRef SLSDFRDisplayStreamCreate(void *, dispatch_queue_t, CGDisplayStreamFrameAvailableHandler);
 extern BOOL DFRSetStatus(int);
 extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p);
@@ -56,10 +54,7 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
     UsbDeviceController *_usbDeviceController;
     
     NSEventModifierFlags _modifierFlags;
-    
     NSInteger _lastMacKeyCodeDown;
-    NSMutableSet *_keysDown;
-    NSTimer *_keyTimer;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
@@ -77,10 +72,7 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
         [NSApp terminate:nil];
         return;
     }
-    
-    _keysDown = [NSMutableSet new];
-
-    
+        
     GlobalEventApplication *app = [NSApplication sharedApplication];
     app.globalEventMask = NSKeyDownMask | NSKeyUpMask | NSFlagsChangedMask |
         NSLeftMouseDownMask | NSLeftMouseUpMask |
@@ -634,12 +626,6 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
     return origin;
 }
 
-- (BOOL)isKeyPressed:(CGKeyCode)key inKeyMap:(KeyMap *)keymap {
-    unsigned char element = key / 32;
-    UInt32 mask = 1 << (key % 32);
-    return ((*keymap)[element].bigEndianValue & mask) != 0;
-}
-
 - (NSDictionary *)modifierFlagMapping {
     static NSDictionary *mapping = nil;
     if (mapping == nil) {
@@ -706,38 +692,7 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
     KeyEvent keyEvent = [self keyEventFromEvent:event];
     NSData* data = [NSData dataWithBytes:&keyEvent length:sizeof(keyEvent)];
     [_usbDeviceController broadcastMessageOfType:ProtocolFrameTypeServerSystemKeyEvent data:data callback:^(NSDictionary *errors) {}];
-    
-    switch (event.type) {
-        case NSEventTypeKeyDown: {
-            BOOL firstKeyDown = (_keysDown.count == 0);
-            [_keysDown addObject:@(event.keyCode)];
-            if (firstKeyDown && !_keyTimer && [NSTimer respondsToSelector:@selector(scheduledTimerWithTimeInterval:repeats:block:)]) {
-                _keyTimer = [NSTimer scheduledTimerWithTimeInterval:0.05 repeats:YES block:^(NSTimer *timer){
-                    KeyMap keymap;
-                    CGSGetKeys(keymap);
-                    for (NSNumber *keyDown in [_keysDown copy]) {
-                        CGKeyCode key = [keyDown integerValue];
-                        if (![self isKeyPressed:key inKeyMap:&keymap]) {
-                            NSEvent *event = [NSEvent keyEventWithType:NSEventTypeKeyUp location:NSZeroPoint modifierFlags:_modifierFlags timestamp:0 windowNumber:0 context:nil characters:@"" charactersIgnoringModifiers:@"" isARepeat:NO keyCode:key];
-                            [self globalEvent:event];
-                        }
-                    }
-                }];
-            }
-            break;
-        }
-        case NSEventTypeKeyUp: {
-            [_keysDown removeObject:@(event.keyCode)];
-            if (_keysDown.count == 0 && _keyTimer) {
-                [_keyTimer invalidate];
-                _keyTimer = nil;
-            }
-            break;
-        }
-        default:
-            break;
-    }
-    
+
     [_modifierKeyController processEvent:event];
 
     if (event.type == NSFlagsChanged) {
