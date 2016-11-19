@@ -193,9 +193,9 @@ static const NSTimeInterval kAnimationDuration = 0.3;
 
 - (BOOL)active {
     return !!_peerChannel
-    && _serverVersion.unsignedLongLongValue <= kServerVersion
-    && _touchBarReady
-    && (_keyboardReady || _mode == OperatingModeTouchBarOnly);
+        && (!_serverVersion || _serverVersion.unsignedLongLongValue <= kServerVersion)
+        && _touchBarReady
+        && (_keyboardReady || _mode == OperatingModeTouchBarOnly);
 }
 
 - (void)setAlign:(Alignment)align {
@@ -261,7 +261,7 @@ static const NSTimeInterval kAnimationDuration = 0.3;
     
     if (!_peerChannel) {
         _infoLabelView.text = @"Please connect this device to your Mac and start TouchBarServer...";
-    } else if (_serverVersion.unsignedLongLongValue > kServerVersion) {
+    } else if (_serverVersion && _serverVersion.unsignedLongLongValue > kServerVersion) {
         _infoLabelView.text = @"🚫 Connected to incompatible TouchBarServer version!\n\nPlease build & install the latest TouchBarClient on this device.";
     } else {
         _infoLabelView.text = @"";
@@ -660,6 +660,7 @@ static const NSTimeInterval kAnimationDuration = 0.3;
         BOOL wasActive = self.active;
 
         _peerChannel = nil;
+        _serverVersion = nil;
         _touchBarReady = NO;
         _keyboardReady = NO;
 
@@ -678,6 +679,7 @@ static const NSTimeInterval kAnimationDuration = 0.3;
     _peerChannel = otherChannel;
     _peerChannel.userInfo = address;
 
+    _serverVersion = nil;
     _touchBarReady = NO;
     _keyboardReady = NO;
 
