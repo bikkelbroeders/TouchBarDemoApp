@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd `dirname ${0}`
+cd `dirname ${0}`/..
 
 repo="https://github.com/bikkelbroeders/TouchBarDemoApp"
 name="Touch Bar Demo App"
