@@ -294,6 +294,10 @@ EOD;
     return KeyboardLayoutType{$type};
 }
 
+- (UInt8)macKbdType {
+    return {$id};
+}
+
 - (CGSize)size {
     return {$size};
 }

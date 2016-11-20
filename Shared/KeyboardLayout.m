@@ -14,6 +14,10 @@
     return KeyboardLayoutTypeUnknown;
 }
 
+- (UInt8)macKbdType {
+    return 0;
+}
+
 - (CGSize)size {
     return CGSizeZero;
 }

@@ -20,6 +20,10 @@
     return KeyboardLayoutTypeISO;
 }
 
+- (UInt8)macKbdType {
+    return 59;
+}
+
 - (CGSize)size {
     return CGSizeMake(290, 113);
 }

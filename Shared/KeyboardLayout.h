@@ -25,6 +25,7 @@ typedef NS_ENUM(NSInteger, KeyboardLayoutType) {
 
 @interface KeyboardLayout : NSObject
 @property (nonatomic, readonly) KeyboardLayoutType type;
+@property (nonatomic, readonly) UInt8 macKbdType;
 @property (nonatomic, readonly) CGSize size;
 @property (nonatomic, readonly) NSUInteger numberOfKeys;
 - (KeyCode)keyCodeForKeyIndex:(NSUInteger)keyIndex;

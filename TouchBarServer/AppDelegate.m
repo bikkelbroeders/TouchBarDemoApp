@@ -93,7 +93,8 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
             _keyboardLayout = [KeyboardLayoutANSI new];
             break;
     }
-    
+    _keyboardType = _keyboardLayout.macKbdType;
+
     GlobalEventApplication *app = [NSApplication sharedApplication];
     app.globalEventMask = NSKeyDownMask | NSKeyUpMask | NSFlagsChangedMask |
         NSLeftMouseDownMask | NSLeftMouseUpMask |

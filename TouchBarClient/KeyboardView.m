@@ -109,7 +109,7 @@ static const NSTimeInterval kCapsLockDelay = 0.1;
         case 0x1D: return @"0"; // kVK_ANSI_0
         case 0x1B: return @"-"; // kVK_ANSI_Minus
         case 0x5D: return @"¥"; // kVK_JIS_Yen
-        case 0x5E: return @""; // kVK_JIS_Underscore
+        case 0x5E: return @"_"; // kVK_JIS_Underscore
         case 0x18: return _layout.type == KeyboardLayoutTypeJIS ? @"^" : @"="; // kVK_ANSI_Equal
         case 0x2A: return _layout.type == KeyboardLayoutTypeJIS ? @"]" : @"\\"; // kVK_ANSI_Backslash
         case 0x1E: return _layout.type == KeyboardLayoutTypeJIS ? @"[" : @"]"; // kVK_ANSI_RightBracket
