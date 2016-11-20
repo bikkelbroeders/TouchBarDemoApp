@@ -155,6 +155,15 @@ static const NSTimeInterval kAnimationDuration = 0.3;
         [_peerChannel close];
         _peerChannel = nil;
     }
+    
+    [self resetSession];
+}
+
+- (void)resetSession {
+    _peerChannel = nil;
+    _serverVersion = nil;
+    _touchBarReady = NO;
+    _keyboardReady = NO;
 }
 
 - (IBAction)recognizerFired:(UIGestureRecognizer*)recognizer {
@@ -194,7 +203,7 @@ static const NSTimeInterval kAnimationDuration = 0.3;
 
 - (BOOL)active {
     return !!_peerChannel
-        && (!_serverVersion || _serverVersion.unsignedLongLongValue <= kServerVersion)
+        && (!_serverVersion || _serverVersion.unsignedLongLongValue == kServerVersion)
         && _touchBarReady
         && (_keyboardReady || _mode == OperatingModeTouchBarOnly);
 }
@@ -261,9 +270,13 @@ static const NSTimeInterval kAnimationDuration = 0.3;
     UIImage *demoImage = nil;
     
     if (!_peerChannel) {
-        _infoLabelView.text = @"Please connect this device to your Mac and start TouchBarServer...";
-    } else if (_serverVersion && _serverVersion.unsignedLongLongValue > kServerVersion) {
-        _infoLabelView.text = @"🚫 Connected to incompatible TouchBarServer version!\n\nPlease build & install the latest TouchBarClient on this device.";
+        _infoLabelView.text = @"Please connect this device to your Mac and start TouchBarServer.";
+    } else if (_serverVersion && _serverVersion.unsignedLongLongValue != kServerVersion) {
+        if (_serverVersion.unsignedLongLongValue < kServerVersion) {
+            _infoLabelView.text = @"🚫 Connected to older, incompatible TouchBarServer version!\n\nPlease build & install the latest TouchBarServer on your Mac.";
+        } else {
+            _infoLabelView.text = @"🚫 Connected to newer, incompatible TouchBarServer version!\n\nPlease build & install the latest TouchBarClient on this device.";
+        }
     } else {
         _infoLabelView.text = @"";
     }
@@ -594,6 +607,11 @@ static const NSTimeInterval kAnimationDuration = 0.3;
 #pragma mark - PTChannelDelegate
 
 - (BOOL)ioFrameChannel:(PTChannel *)channel shouldAcceptFrameOfType:(uint32_t)type tag:(uint32_t)tag payloadSize:(uint32_t)payloadSize {
+    if (_serverVersion && _serverVersion.unsignedLongLongValue != kServerVersion) {
+        // Ignore messages from incompatible server
+        return NO;
+    }
+
     return type >= kProtocolFrameTypeServerMin && type <= kProtocolFrameTypeServerMax;
 }
 
@@ -602,8 +620,11 @@ static const NSTimeInterval kAnimationDuration = 0.3;
 
     switch (type) {
         case ProtocolFrameTypeServerVersion: {
-            Version *version = (Version *)payload.data;
-            _serverVersion = @(*version);
+            if (!_serverVersion) {
+                Version *version = (Version *)payload.data;
+                _serverVersion = @(*version);
+                [self updateViews:self.active];
+            }
         }
             
         case ProtocolFrameTypeServerImage: {
@@ -670,10 +691,7 @@ static const NSTimeInterval kAnimationDuration = 0.3;
     if (channel == _peerChannel) {
         BOOL wasActive = self.active;
 
-        _peerChannel = nil;
-        _serverVersion = nil;
-        _touchBarReady = NO;
-        _keyboardReady = NO;
+        [self resetSession];
 
         [self updateViews:wasActive || self.active];
     }
@@ -687,12 +705,9 @@ static const NSTimeInterval kAnimationDuration = 0.3;
 
     BOOL wasActive = self.active;
 
+    [self resetSession];
     _peerChannel = otherChannel;
     _peerChannel.userInfo = address;
-
-    _serverVersion = nil;
-    _touchBarReady = NO;
-    _keyboardReady = NO;
 
     [self updateViews:wasActive || self.active];
 }
