@@ -9,12 +9,16 @@
 #import "AppDelegate.h"
 
 #import "GlobalEventApplication.h"
-#import "KeyboardKey.h"
 #import "Keyboard.h"
 #import "ModifierKeyController.h"
 #import "Protocol.h"
 #import "TouchBarWindow.h"
 #import "UsbDeviceController.h"
+
+#import "KeyboardLayout.h"
+#import "KeyboardLayoutANSI.h"
+#import "KeyboardLayoutISO.h"
+#import "KeyboardLayoutJIS.h"
 
 @import Carbon;
 
@@ -52,6 +56,9 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
 
     CGDisplayStreamRef _stream;
     UsbDeviceController *_usbDeviceController;
+
+    UInt8 _keyboardType;
+    KeyboardLayout *_keyboardLayout;
     
     NSEventModifierFlags _modifierFlags;
     NSInteger _lastMacKeyCodeDown;
@@ -72,7 +79,21 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
         [NSApp terminate:nil];
         return;
     }
-        
+    
+    _keyboardType = LMGetKbdType();
+    switch (KBGetLayoutType(_keyboardType)) {
+        case kKeyboardISO:
+            _keyboardLayout = [KeyboardLayoutISO new];
+            break;
+        case kKeyboardJIS:
+            _keyboardLayout = [KeyboardLayoutJIS new];
+            break;
+        case kKeyboardANSI:
+        default:
+            _keyboardLayout = [KeyboardLayoutANSI new];
+            break;
+    }
+    
     GlobalEventApplication *app = [NSApplication sharedApplication];
     app.globalEventMask = NSKeyDownMask | NSKeyUpMask | NSFlagsChangedMask |
         NSLeftMouseDownMask | NSLeftMouseUpMask |
@@ -230,352 +251,62 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
     [self toggleTouchBarWindow];
 }
 
-- (NSArray<KeyboardKey*>*)createKeyboardKeys {
-    NSDictionary* usbToMac = @{@(10): @(5),
-                               @(100): @(10),
-                               @(103): @(81),
-                               @(104): @(105),
-                               @(105): @(107),
-                               @(106): @(113),
-                               @(107): @(106),
-                               @(108): @(64),
-                               @(109): @(79),
-                               @(11): @(4),
-                               @(110): @(80),
-                               @(111): @(90),
-                               @(117): @(114),
-                               @(12): @(34),
-                               @(127): @(74),
-                               @(128): @(72),
-                               @(129): @(73),
-                               @(13): @(38),
-                               @(133): @(95),
-                               @(135): @(94),
-                               @(137): @(93),
-                               @(14): @(40),
-                               @(144): @(102),
-                               @(148): @(104),
-                               @(15): @(37),
-                               @(16): @(46),
-                               @(17): @(45),
-                               @(18): @(31),
-                               @(19): @(35),
-                               @(20): @(12),
-                               @(21): @(15),
-                               @(216): @(71),
-                               @(22): @(1),
-                               @(224): @(59),
-                               @(225): @(56),
-                               @(226): @(58),
-                               @(227): @(55),
-                               @(228): @(62),
-                               @(229): @(60),
-                               @(23): @(17),
-                               @(230): @(61),
-                               @(232): @(63),
-                               @(24): @(32),
-                               @(25): @(9),
-                               @(26): @(13),
-                               @(27): @(7),
-                               @(28): @(16),
-                               @(29): @(6),
-                               @(30): @(18),
-                               @(31): @(19),
-                               @(32): @(20),
-                               @(33): @(21),
-                               @(34): @(23),
-                               @(35): @(22),
-                               @(36): @(26),
-                               @(37): @(28),
-                               @(38): @(25),
-                               @(39): @(29),
-                               @(4): @(0),
-                               @(40): @(36),
-                               @(41): @(53),
-                               @(42): @(51),
-                               @(43): @(48),
-                               @(44): @(49),
-                               @(45): @(27),
-                               @(46): @(24),
-                               @(47): @(33),
-                               @(48): @(30),
-                               @(49): @(42),
-                               @(5): @(11),
-                               @(51): @(41),
-                               @(52): @(39),
-                               @(53): @(50),
-                               @(54): @(43),
-                               @(55): @(47),
-                               @(56): @(44),
-                               @(57): @(57),
-                               @(58): @(122),
-                               @(59): @(120),
-                               @(6): @(8),
-                               @(60): @(99),
-                               @(61): @(118),
-                               @(62): @(96),
-                               @(63): @(97),
-                               @(64): @(98),
-                               @(65): @(100),
-                               @(66): @(101),
-                               @(67): @(109),
-                               @(68): @(103),
-                               @(69): @(111),
-                               @(7): @(2),
-                               @(74): @(115),
-                               @(75): @(116),
-                               @(76): @(117),
-                               @(77): @(119),
-                               @(78): @(121),
-                               @(79): @(124),
-                               @(8): @(14),
-                               @(80): @(123),
-                               @(81): @(125),
-                               @(82): @(126),
-                               @(84): @(75),
-                               @(85): @(67),
-                               @(86): @(78),
-                               @(87): @(69),
-                               @(88): @(76),
-                               @(89): @(83),
-                               @(9): @(3),
-                               @(90): @(84),
-                               @(91): @(85),
-                               @(92): @(86),
-                               @(93): @(87),
-                               @(94): @(88),
-                               @(95): @(89),
-                               @(96): @(91),
-                               @(97): @(92),
-                               @(98): @(82),
-                               @(99): @(65),
-                               };
-    
-    TISInputSourceRef currentKeyboard = TISCopyCurrentKeyboardInputSource();
-    CFDataRef layoutData = TISGetInputSourceProperty(currentKeyboard, kTISPropertyUnicodeKeyLayoutData);
+- (NSMutableDictionary *)keyCaptionsForCurrentInputSource {
+    TISInputSourceRef inputSource = TISCopyCurrentKeyboardInputSource();
+    CFDataRef ucLayoutData = TISGetInputSourceProperty(inputSource, kTISPropertyUnicodeKeyLayoutData);
+    if (!ucLayoutData) {
+        CFRelease(inputSource);
+        inputSource = TISCopyCurrentASCIICapableKeyboardLayoutInputSource();
+        ucLayoutData = TISGetInputSourceProperty(inputSource, kTISPropertyUnicodeKeyLayoutData);
+    }
+    const UCKeyboardLayout *ucLayout = (const UCKeyboardLayout *)CFDataGetBytePtr(ucLayoutData);
 
-    if (!layoutData) {
-        CFRelease(currentKeyboard);
-        currentKeyboard = TISCopyCurrentASCIICapableKeyboardLayoutInputSource();
-        layoutData = TISGetInputSourceProperty(currentKeyboard, kTISPropertyUnicodeKeyLayoutData);
+    UInt32 ucModifierFlagsForModifierFlags[KeyEventModifierFlagFunction];
+    for (KeyEventModifierFlags modifierFlags = 0; modifierFlags < KeyEventModifierFlagFunction; modifierFlags++) {
+        UInt32 flags = 0;
+        if (modifierFlags & KeyEventModifierFlagShift)      flags |= (shiftKey   >> 8);
+        if (modifierFlags & KeyEventModifierFlagControl)    flags |= (controlKey >> 8);
+        if (modifierFlags & KeyEventModifierFlagOption)     flags |= (optionKey  >> 8);
+        if (modifierFlags & KeyEventModifierFlagCapsLock)   flags |= (alphaLock  >> 8);
+        if (modifierFlags & KeyEventModifierFlagCommand)    flags |= (cmdKey     >> 8);
+        ucModifierFlagsForModifierFlags[modifierFlags] = flags;
     }
 
-    const UCKeyboardLayout *keyboardLayout = (const UCKeyboardLayout *)CFDataGetBytePtr(layoutData);
-    
-    UInt8 keyboardType = LMGetKbdType();
-    UInt32 ucModifiers[32] = {0};
-    for(KeyboardKeyModifier modifier = 0; modifier < KeyboardKeyModifierLast; modifier++) {
-        UInt32 ucModifier = 0;
-        if(modifier & KeyboardKeyModifierCommand) ucModifier |= (cmdKey >> 8);
-        if(modifier & KeyboardKeyModifierShift) ucModifier |= (shiftKey >> 8);
-        if(modifier & KeyboardKeyModifierControl) ucModifier |= (controlKey >> 8);
-        if(modifier & KeyboardKeyModifierOption) ucModifier |= (optionKey >> 8);
-        if(modifier & KeyboardKeyModifierAlphaLock) ucModifier |= (alphaLock >> 8);
-        ucModifiers[modifier] = ucModifier;
-    }
-    NSMutableArray<KeyboardKey *>* keys  = [NSMutableArray new];
-    for(NSNumber* usbKeyCode in usbToMac.allKeys) {
-        CGKeyCode macKeyCode = [usbToMac[usbKeyCode] integerValue];
+    NSMutableDictionary *allKeyCaptions = [NSMutableDictionary dictionaryWithCapacity:_keyboardLayout.numberOfKeys];
+    for (NSUInteger keyIndex = 0; keyIndex < _keyboardLayout.numberOfKeys; keyIndex++) {
+        KeyCode keyCode = [_keyboardLayout keyCodeForKeyIndex:keyIndex];
+        if (keyCode == 0xFF) continue;
+        if (allKeyCaptions[@(keyCode)]) continue;
+        if ([KeyboardLayout fixedKeyCaptionForKeyCode:keyCode withFnDown:NO] != nil) continue;
         
-        KeyboardKey* key = [KeyboardKey new];
-        [keys addObject:key];
-        
-        key.keyCode = usbKeyCode.integerValue;
-        key.macKeyCode = macKeyCode;
-        
-        NSMutableDictionary<NSNumber*, KeyboardKeyCap*>* caps = [NSMutableDictionary new];
-        for(KeyboardKeyModifier modifiers = 0; modifiers < KeyboardKeyModifierLast; modifiers++) {
-            KeyboardKeyCap* keyCap = [KeyboardKeyCap new];
+        NSMutableArray *keyCaptions = [NSMutableArray arrayWithCapacity:KeyEventModifierFlagFunction];
+        for (KeyEventModifierFlags modifierFlags = 0; modifierFlags < KeyEventModifierFlagFunction; modifierFlags++) {
+            UInt32 ucModifierFlags = ucModifierFlagsForModifierFlags[modifierFlags];
             
-            if(macKeyCode >= 0x38 && macKeyCode <= 0x3F)
-                keyCap.type = keyCap.type | KeyboardKeyTypeModifier;
-            
-            NSString* string = [self fixedKeyCapForMacCode:macKeyCode modifiers:modifiers];
-            if(nil == string)
-            {
-                UInt32 keysDown = 0;
-                UniChar chars[4] = {0};
-                UniCharCount realLength = 0;
-                
-                KeyboardKeyModifier fixedModifiers = (modifiers & ~KeyboardKeyModifierFn);
-                UInt32 ucModifier = ucModifiers[fixedModifiers];
-                UCKeyTranslate(keyboardLayout, macKeyCode, kUCKeyActionDisplay, ucModifier, keyboardType, 0, &keysDown, sizeof(chars) / sizeof(chars[0]), &realLength, chars);
-                string = [[NSString alloc] initWithCharacters:chars length:1];
-                
-                if((modifiers & KeyboardKeyModifierControl) != 0 && [string characterAtIndex:0] < 0x20) {
-                    keyCap.type = keyCap.type | KeyboardKeyTypeControl;
-                    UCKeyTranslate(keyboardLayout, macKeyCode, kUCKeyActionDisplay, ucModifier & (~(controlKey >> 8)), keyboardType, 0, &keysDown, sizeof(chars) / sizeof(chars[0]), &realLength, chars);
-                    string = [NSString stringWithCharacters:chars length:realLength];
-                }
+            UInt32 deadKeyState;
+            UniChar unicodeString[4] = {0};
+            UniCharCount actualStringLength = 0;
+
+            UCKeyTranslate(ucLayout, keyCode, kUCKeyActionDisplay, ucModifierFlags, _keyboardType, 0, &deadKeyState, sizeof(unicodeString) / sizeof(UniChar), &actualStringLength, unicodeString);
+            NSString *keyCaption = [[NSString alloc] initWithCharacters:unicodeString length:actualStringLength];
+
+            if ((modifierFlags & KeyEventModifierFlagControl) && (keyCaption.length == 0 || [keyCaption characterAtIndex:0] < 0x20)) {
+                ucModifierFlags &= ~(controlKey >> 8);
+                UCKeyTranslate(ucLayout, keyCode, kUCKeyActionDisplay, ucModifierFlags, _keyboardType, 0, &deadKeyState, sizeof(unicodeString) / sizeof(UniChar), &actualStringLength, unicodeString);
+                keyCaption = [[NSString alloc] initWithCharacters:unicodeString length:actualStringLength];
             }
-            keyCap.text = string;
-            
-            caps[@(modifiers)] = keyCap;
-        }
-        key.caps = caps;
-    }
-    
-    CFRelease(currentKeyboard);
-    
-    return keys;
-}
 
-- (NSString*)fixedKeyCapForMacCode:(CGKeyCode)code modifiers:(KeyboardKeyModifier)modifiers {
-    if(modifiers == KeyboardKeyModifierFn) {
-        CGKeyCode fixedCode = code;
-        if(code <= 0x7a) {
-            fixedCode = 0x34;
-            if(code != 0x24) {
-                if(code == 0x33) {
-                    fixedCode = 0x75;
-                } else {
-                    fixedCode = code;
-                }
+            if (keyCaption.length == 0 || [keyCaption characterAtIndex:0] < 0x20) {
+                keyCaption = @"";
             }
-        } else {
-            fixedCode = code -123;
-            if(fixedCode > 3) {
-                fixedCode = code;
-            } else {
-                switch(fixedCode) {
-                    case 0: fixedCode = 0x73; break;
-                    case 1: fixedCode = 0x77; break;
-                    case 2: fixedCode = 0x79; break;
-                    case 3: fixedCode = 0x74; break;
-                    default: break;
-                }
-            }
+            [keyCaptions addObject:keyCaption];
         }
-        
-        code = fixedCode;
-    }
-    
-    static NSDictionary* mapping = nil;
-    if(mapping == nil)
-    {
-        mapping = @{    @(111): @"\uf861F12",
-                        @(71): @"\u2327",
-                        @(102): @"\u82f1\u6570",
-                        @(53): @"esc",
-                        @(124): @"\u21e2",
-                        @(115): @"\u2196",
-                        @(106): @"\uf861F16",
-                        @(97): @"\uf860F6",
-                        @(57): @"\u21ea",
-                        @(48): @"\u21e5",
-                        @(119): @"\u2198",
-                        @(79): @"\uf861F18",
-                        @(101): @"\uf860F9",
-                        @(61): @"\u2325",
-                        @(52): @"\u2324",
-                        @(123): @"\u21e0",
-                        @(114): @"?\u20dd",
-                        @(105): @"\uf861F13",
-                        @(96): @"\uf860F5",
-                        @(56): @"\u21e7",
-                        @(118): @"\uf860F4",
-                        @(109): @"\uf861F10",
-                        @(100): @"\uf860F8",
-                        @(60): @"\u21e7",
-                        @(51): @"\u232b",
-                        @(122): @"\uf860F1",
-                        @(113): @"\uf861F15",
-                        @(104): @"\u304b\u306a",
-                        @(64): @"\uf861F17",
-                        @(55): @"\u2318",
-                        @(126): @"\u21e1",
-                        @(117): @"\u2326",
-                        @(99): @"\uf860F3",
-                        @(59): @"\u2303",
-                        @(90): @"F20",
-                        @(121): @"\u21df",
-                        @(103): @"\uf861F11",
-                        @(63): @"fn",
-                        @(125): @"\u21e3",
-                        @(116): @"\u21de",
-                        @(76): @"\u2324",
-                        @(36): @"\u21a9",
-                        @(107): @"\uf861F14",
-                        @(98): @"\uf860F7",
-                        @(58): @"\u2325",
-                        @(120): @"\uf860F2",
-                        @(80): @"\uf861F19",
-                        };
-    }
-    
-    return mapping[@(code)];
-}
 
-- (NSString *)keyboardHTML {
-    UInt8 keyboardType = LMGetKbdType();
-    switch (KBGetLayoutType(keyboardType)) {
-        case kKeyboardISO:
-            keyboardType = 59;
-            break;
-            
-        case kKeyboardJIS:
-            keyboardType = 60;
-            break;
-            
-        case kKeyboardANSI:
-        default:
-            keyboardType = 58;
-            break;
+        allKeyCaptions[@(keyCode)] = keyCaptions;
     }
     
-    NSString* folder = @"/System/Library/Input Methods/KeyboardViewer.app/Contents/Resources";
-    NSString* file = [NSString stringWithFormat:@"KeyboardLayoutDefinition%@.svg", @(keyboardType)];
-    NSString* path = [folder stringByAppendingPathComponent:file];
-    NSURL* url = [NSURL fileURLWithPath:path];
-    
-    NSString* svg = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
-    svg = [svg stringByReplacingOccurrencesOfString:@"<?xml version=\"1.0\" standalone=\"no\"?>" withString:@""];
-    svg = [svg stringByReplacingOccurrencesOfString:@"onmousedown" withString:@"ontouchstart"];
-    svg = [svg stringByReplacingOccurrencesOfString:@"onmouseup" withString:@"ontouchend"];
-    
-    NSMutableDictionary* allKeys = [NSMutableDictionary new];
-    for(KeyboardKey* key in [self createKeyboardKeys]) {
-        NSMutableDictionary* keyDict = [NSMutableDictionary new];
-        keyDict[@"k"] = @(key.macKeyCode);
-        
-        NSMutableDictionary* defaultCapDict = [NSMutableDictionary new];
-        defaultCapDict[@"x"] = key.caps[@0].text;
-        if (key.caps[@0].type != 0) defaultCapDict[@"t"] = @(key.caps[@0].type);
-        keyDict[@"d"] = defaultCapDict;
-        
-        NSMutableDictionary *capsDict = [NSMutableDictionary new];
-        for(NSNumber* modifiers in [key.caps.allKeys sortedArrayUsingSelector:@selector(compare:)]) {
-            KeyboardKeyCap* cap = key.caps[modifiers];
-            NSMutableDictionary* capDict = [NSMutableDictionary new];
-            capDict[@"x"] = cap.text;
-            if (cap.type != 0)
-                capDict[@"t"] = @(cap.type);
-            
-            if (![capDict isEqual:defaultCapDict])
-                capsDict[[modifiers stringValue]] = capDict;
-        }
-        keyDict[@"c"] = capsDict;
-        allKeys[[@(key.keyCode) description]] = keyDict;
-    }
-    
-    NSData* json = [NSJSONSerialization dataWithJSONObject:allKeys options:0 error:nil];
-    NSString* jsonString = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
-    jsonString = [jsonString stringByReplacingOccurrencesOfString:@"\"([a-z0-9]+)\":" withString:@"$1:" options:NSRegularExpressionSearch range:NSMakeRange(0, jsonString.length)];
-    
-    NSString *html = [NSString stringWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"Keyboard" withExtension:@"html"] encoding:NSUTF8StringEncoding error:nil];
-    
-    html = [html stringByReplacingOccurrencesOfString:@"{/*KEYDATA*/}" withString:jsonString];
-    html = [html stringByReplacingOccurrencesOfString:@"%SVGELEMENT%" withString:svg];
-
-    // Poor man's minify
-    // DISCLAIMER: _will_ break HTML/JS/CSS other than the one we're using, DO NOT REUSE!
-    html = [html stringByReplacingOccurrencesOfString:@"//.*\n" withString:@"" options:NSRegularExpressionSearch range:NSMakeRange(0, html.length)];
-    html = [html stringByReplacingOccurrencesOfString:@"/\\*.*\\*/" withString:@"" options:NSRegularExpressionSearch range:NSMakeRange(0, html.length)];
-    html = [html stringByReplacingOccurrencesOfString:@"\\s" withString:@" " options:NSRegularExpressionSearch range:NSMakeRange(0, html.length)];
-    html = [html stringByReplacingOccurrencesOfString:@"  +" withString:@" " options:NSRegularExpressionSearch range:NSMakeRange(0, html.length)];
-    html = [html stringByReplacingOccurrencesOfString:@" ?([-:(){}<>,;+*/=]) ?" withString:@"$1" options:NSRegularExpressionSearch range:NSMakeRange(0, html.length)];
-    
-    return html;
+    CFRelease(inputSource);
+    return allKeyCaptions;
 }
 
 - (void)toggleTouchBarWindow {
@@ -864,7 +595,7 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
     CGEventFlags flags = CGEventGetFlags(eventRef);
     flags &= ~NSEventModifierFlagDeviceIndependentFlagsMask;
     NSEventModifierFlags modifiersForKey = [self modifierFlagsForKeyCode:keyEvent.key];
-    flags |= isDown ? (_modifierFlags | modifiersForKey) : _modifierFlags & ~modifiersForKey;
+    flags |= isDown ? (_modifierFlags | modifiersForKey) : (_modifierFlags & ~modifiersForKey);
     CGEventSetFlags(eventRef, flags);
     CGEventPost(kCGHIDEventTap, eventRef);
     CFRelease(eventRef);
@@ -889,6 +620,21 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
     }
 }
 
+- (void)sendKeyboardLayoutToDevice:(NSNumber *)deviceId {
+    NSDictionary *layoutInfo = @{
+                                 @"type": @(_keyboardLayout.type),
+                                 @"captions": [self keyCaptionsForCurrentInputSource],
+                                 };
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:layoutInfo];
+    
+    if (deviceId) {
+        [_usbDeviceController sendMessageToDevice:deviceId type:ProtocolFrameTypeServerKeyboardLayout data:data callback:^(NSError *error){}];
+    } else {
+        // Broadcase when no deviceId is given
+        [_usbDeviceController broadcastMessageOfType:ProtocolFrameTypeServerKeyboardLayout data:data callback:^(NSDictionary *errors) {}];
+    }
+}
+
 #pragma mark - UsbDeviceControllerDelegate
 
 - (void)deviceDidConnect:(NSNumber *)deviceId {
@@ -901,8 +647,7 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
     NSData* alignChangeData = [NSData dataWithBytes:&_remoteAlign length:sizeof(_remoteAlign)];
     [_usbDeviceController sendMessageToDevice:deviceId type:ProtocolFrameTypeServerAlignChange data:alignChangeData callback:^(NSError *error){}];
 
-    NSData *keyboardLayoutData = [[self keyboardHTML] dataUsingEncoding:NSUTF8StringEncoding];
-    [_usbDeviceController sendMessageToDevice:deviceId type:ProtocolFrameTypeServerKeyboardLayout data:keyboardLayoutData callback:^(NSError *error){}];
+    [self sendKeyboardLayoutToDevice:deviceId];
     
     // Always start a new stream so the new device gets an initial frame
     [self stopStreaming];

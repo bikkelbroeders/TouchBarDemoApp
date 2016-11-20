@@ -12,9 +12,7 @@
 		5E19C51C1DCB94BF00DA3CB1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E19C51B1DCB94BF00DA3CB1 /* main.m */; };
 		5E229F061DD7A8EC00388015 /* TouchBarWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E229F051DD7A8EC00388015 /* TouchBarWindow.m */; };
 		5E229F091DD7A90800388015 /* TouchBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E229F081DD7A90800388015 /* TouchBarView.m */; };
-		5E46ED1C1DD214A50011B72C /* KeyboardKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E46ED1B1DD214A50011B72C /* KeyboardKey.m */; };
 		5E46ED1F1DD216EF0011B72C /* KeyboardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E46ED1E1DD216EF0011B72C /* KeyboardView.m */; };
-		5E46ED291DD286E50011B72C /* Keyboard.html in Resources */ = {isa = PBXBuildFile; fileRef = 5E46ED281DD286E50011B72C /* Keyboard.html */; };
 		5E6AA4621DCAA65B00B804EC /* DFRFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E6AA4601DCAA65B00B804EC /* DFRFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		5E6AA4631DCAA65B00B804EC /* SkyLight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E6AA4611DCAA65B00B804EC /* SkyLight.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		5E6F8A361DDD0FD500E2463B /* ModifierKeyController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E6F8A351DDD0FD500E2463B /* ModifierKeyController.m */; };
@@ -31,12 +29,20 @@
 		5EC06EB91DCFCF4200A7AA57 /* UsbDeviceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EC06EB81DCFCF4200A7AA57 /* UsbDeviceController.m */; };
 		5EC478651DCBD51200C06ED1 /* TouchBarServer Helper.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5E19C5151DCB94BF00DA3CB1 /* TouchBarServer Helper.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5EE8BF561DD0D68A00AA074F /* GlobalEventApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EE8BF551DD0D68A00AA074F /* GlobalEventApplication.m */; };
-		5EF078601DCA8CC400BD69DA /* PTChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF078581DCA8CC400BD69DA /* PTChannel.m */; };
-		5EF078611DCA8CC400BD69DA /* PTChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF078581DCA8CC400BD69DA /* PTChannel.m */; };
-		5EF078621DCA8CC400BD69DA /* PTProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF0785B1DCA8CC400BD69DA /* PTProtocol.m */; };
-		5EF078631DCA8CC400BD69DA /* PTProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF0785B1DCA8CC400BD69DA /* PTProtocol.m */; };
-		5EF078641DCA8CC400BD69DA /* PTUSBHub.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF0785D1DCA8CC400BD69DA /* PTUSBHub.m */; };
-		5EF078651DCA8CC400BD69DA /* PTUSBHub.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF0785D1DCA8CC400BD69DA /* PTUSBHub.m */; };
+		5EF078601DCA8CC400BD69DA /* PTChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF078581DCA8CC400BD69DA /* PTChannel.m */; settings = {COMPILER_FLAGS = "-w"; }; };
+		5EF078611DCA8CC400BD69DA /* PTChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF078581DCA8CC400BD69DA /* PTChannel.m */; settings = {COMPILER_FLAGS = "-w"; }; };
+		5EF078621DCA8CC400BD69DA /* PTProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF0785B1DCA8CC400BD69DA /* PTProtocol.m */; settings = {COMPILER_FLAGS = "-w"; }; };
+		5EF078631DCA8CC400BD69DA /* PTProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF0785B1DCA8CC400BD69DA /* PTProtocol.m */; settings = {COMPILER_FLAGS = "-w"; }; };
+		5EF078641DCA8CC400BD69DA /* PTUSBHub.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF0785D1DCA8CC400BD69DA /* PTUSBHub.m */; settings = {COMPILER_FLAGS = "-w"; }; };
+		5EF078651DCA8CC400BD69DA /* PTUSBHub.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF0785D1DCA8CC400BD69DA /* PTUSBHub.m */; settings = {COMPILER_FLAGS = "-w"; }; };
+		5EF7ADB31DE074A10008BEDD /* KeyboardLayoutANSI.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF7ADAE1DE074A10008BEDD /* KeyboardLayoutANSI.m */; };
+		5EF7ADB41DE074A10008BEDD /* KeyboardLayoutANSI.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF7ADAE1DE074A10008BEDD /* KeyboardLayoutANSI.m */; };
+		5EF7ADB51DE074A10008BEDD /* KeyboardLayoutISO.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF7ADB01DE074A10008BEDD /* KeyboardLayoutISO.m */; };
+		5EF7ADB61DE074A10008BEDD /* KeyboardLayoutISO.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF7ADB01DE074A10008BEDD /* KeyboardLayoutISO.m */; };
+		5EF7ADB71DE074A10008BEDD /* KeyboardLayoutJIS.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF7ADB21DE074A10008BEDD /* KeyboardLayoutJIS.m */; };
+		5EF7ADB81DE074A10008BEDD /* KeyboardLayoutJIS.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF7ADB21DE074A10008BEDD /* KeyboardLayoutJIS.m */; };
+		5EF7ADBB1DE074CE0008BEDD /* KeyboardLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF7ADBA1DE074CE0008BEDD /* KeyboardLayout.m */; };
+		5EF7ADBC1DE074CE0008BEDD /* KeyboardLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF7ADBA1DE074CE0008BEDD /* KeyboardLayout.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,11 +80,8 @@
 		5E229F051DD7A8EC00388015 /* TouchBarWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchBarWindow.m; sourceTree = "<group>"; };
 		5E229F071DD7A90800388015 /* TouchBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchBarView.h; sourceTree = "<group>"; };
 		5E229F081DD7A90800388015 /* TouchBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchBarView.m; sourceTree = "<group>"; };
-		5E46ED1A1DD214A50011B72C /* KeyboardKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardKey.h; sourceTree = "<group>"; };
-		5E46ED1B1DD214A50011B72C /* KeyboardKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardKey.m; sourceTree = "<group>"; };
 		5E46ED1D1DD216EF0011B72C /* KeyboardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardView.h; sourceTree = "<group>"; };
 		5E46ED1E1DD216EF0011B72C /* KeyboardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardView.m; sourceTree = "<group>"; };
-		5E46ED281DD286E50011B72C /* Keyboard.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Keyboard.html; sourceTree = "<group>"; };
 		5E6AA4601DCAA65B00B804EC /* DFRFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DFRFoundation.framework; path = ../../../../System/Library/PrivateFrameworks/DFRFoundation.framework; sourceTree = "<group>"; };
 		5E6AA4611DCAA65B00B804EC /* SkyLight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SkyLight.framework; path = ../../../../System/Library/PrivateFrameworks/SkyLight.framework; sourceTree = "<group>"; };
 		5E6F8A341DDD0FD500E2463B /* ModifierKeyController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModifierKeyController.h; sourceTree = "<group>"; };
@@ -115,6 +118,14 @@
 		5EF0785B1DCA8CC400BD69DA /* PTProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTProtocol.m; sourceTree = "<group>"; };
 		5EF0785C1DCA8CC400BD69DA /* PTUSBHub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUSBHub.h; sourceTree = "<group>"; };
 		5EF0785D1DCA8CC400BD69DA /* PTUSBHub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUSBHub.m; sourceTree = "<group>"; };
+		5EF7ADAD1DE074A10008BEDD /* KeyboardLayoutANSI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardLayoutANSI.h; sourceTree = "<group>"; };
+		5EF7ADAE1DE074A10008BEDD /* KeyboardLayoutANSI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardLayoutANSI.m; sourceTree = "<group>"; };
+		5EF7ADAF1DE074A10008BEDD /* KeyboardLayoutISO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardLayoutISO.h; sourceTree = "<group>"; };
+		5EF7ADB01DE074A10008BEDD /* KeyboardLayoutISO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardLayoutISO.m; sourceTree = "<group>"; };
+		5EF7ADB11DE074A10008BEDD /* KeyboardLayoutJIS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardLayoutJIS.h; sourceTree = "<group>"; };
+		5EF7ADB21DE074A10008BEDD /* KeyboardLayoutJIS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardLayoutJIS.m; sourceTree = "<group>"; };
+		5EF7ADB91DE074CE0008BEDD /* KeyboardLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardLayout.h; sourceTree = "<group>"; };
+		5EF7ADBA1DE074CE0008BEDD /* KeyboardLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardLayout.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -227,8 +238,6 @@
 				5EAC87181DCA8BAC001BB8AC /* AppDelegate.m */,
 				5EE8BF541DD0D68A00AA074F /* GlobalEventApplication.h */,
 				5EE8BF551DD0D68A00AA074F /* GlobalEventApplication.m */,
-				5E46ED1A1DD214A50011B72C /* KeyboardKey.h */,
-				5E46ED1B1DD214A50011B72C /* KeyboardKey.m */,
 				5E6F8A341DDD0FD500E2463B /* ModifierKeyController.h */,
 				5E6F8A351DDD0FD500E2463B /* ModifierKeyController.m */,
 				5E19C50E1DCB947B00DA3CB1 /* StartAtLoginController.h */,
@@ -241,7 +250,6 @@
 				5EC06EB81DCFCF4200A7AA57 /* UsbDeviceController.m */,
 				5EAC871D1DCA8BAD001BB8AC /* Assets.xcassets */,
 				5EAC871F1DCA8BAD001BB8AC /* MainMenu.xib */,
-				5E46ED281DD286E50011B72C /* Keyboard.html */,
 				5EAC87221DCA8BAD001BB8AC /* Info.plist */,
 				5EAC871A1DCA8BAC001BB8AC /* Supporting Files */,
 			);
@@ -259,8 +267,11 @@
 		5EF078521DCA8CC400BD69DA /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				5EF7ADAC1DE074A10008BEDD /* Generated */,
 				5EF078531DCA8CC400BD69DA /* Peertalk */,
 				5EA688171DD3FBC1005253EC /* Keyboard.h */,
+				5EF7ADB91DE074CE0008BEDD /* KeyboardLayout.h */,
+				5EF7ADBA1DE074CE0008BEDD /* KeyboardLayout.m */,
 				5E7EB02A1DCA91AD00C2B09A /* Protocol.h */,
 			);
 			path = Shared;
@@ -280,6 +291,19 @@
 				5EF0785D1DCA8CC400BD69DA /* PTUSBHub.m */,
 			);
 			path = Peertalk;
+			sourceTree = "<group>";
+		};
+		5EF7ADAC1DE074A10008BEDD /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				5EF7ADAD1DE074A10008BEDD /* KeyboardLayoutANSI.h */,
+				5EF7ADAE1DE074A10008BEDD /* KeyboardLayoutANSI.m */,
+				5EF7ADAF1DE074A10008BEDD /* KeyboardLayoutISO.h */,
+				5EF7ADB01DE074A10008BEDD /* KeyboardLayoutISO.m */,
+				5EF7ADB11DE074A10008BEDD /* KeyboardLayoutJIS.h */,
+				5EF7ADB21DE074A10008BEDD /* KeyboardLayoutJIS.m */,
+			);
+			path = Generated;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -407,7 +431,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5EAC871E1DCA8BAD001BB8AC /* Assets.xcassets in Resources */,
-				5E46ED291DD286E50011B72C /* Keyboard.html in Resources */,
 				5EAC87211DCA8BAD001BB8AC /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -429,12 +452,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				5EAC87021DCA8B83001BB8AC /* ViewController.m in Sources */,
+				5EF7ADB31DE074A10008BEDD /* KeyboardLayoutANSI.m in Sources */,
 				5EAC86FF1DCA8B83001BB8AC /* AppDelegate.m in Sources */,
 				5EAC86FC1DCA8B83001BB8AC /* main.m in Sources */,
 				5EF078601DCA8CC400BD69DA /* PTChannel.m in Sources */,
 				5E46ED1F1DD216EF0011B72C /* KeyboardView.m in Sources */,
 				5EF078641DCA8CC400BD69DA /* PTUSBHub.m in Sources */,
+				5EF7ADB51DE074A10008BEDD /* KeyboardLayoutISO.m in Sources */,
+				5EF7ADBB1DE074CE0008BEDD /* KeyboardLayout.m in Sources */,
 				5EF078621DCA8CC400BD69DA /* PTProtocol.m in Sources */,
+				5EF7ADB71DE074A10008BEDD /* KeyboardLayoutJIS.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -446,13 +473,16 @@
 				5EC06EB91DCFCF4200A7AA57 /* UsbDeviceController.m in Sources */,
 				5EF078631DCA8CC400BD69DA /* PTProtocol.m in Sources */,
 				5E229F091DD7A90800388015 /* TouchBarView.m in Sources */,
+				5EF7ADB81DE074A10008BEDD /* KeyboardLayoutJIS.m in Sources */,
+				5EF7ADB61DE074A10008BEDD /* KeyboardLayoutISO.m in Sources */,
 				5E229F061DD7A8EC00388015 /* TouchBarWindow.m in Sources */,
 				5EF078611DCA8CC400BD69DA /* PTChannel.m in Sources */,
+				5EF7ADB41DE074A10008BEDD /* KeyboardLayoutANSI.m in Sources */,
 				5E6F8A361DDD0FD500E2463B /* ModifierKeyController.m in Sources */,
+				5EF7ADBC1DE074CE0008BEDD /* KeyboardLayout.m in Sources */,
 				5EE8BF561DD0D68A00AA074F /* GlobalEventApplication.m in Sources */,
 				5EF078651DCA8CC400BD69DA /* PTUSBHub.m in Sources */,
 				5EAC87191DCA8BAC001BB8AC /* AppDelegate.m in Sources */,
-				5E46ED1C1DD214A50011B72C /* KeyboardKey.m in Sources */,
 				5E19C5101DCB947B00DA3CB1 /* StartAtLoginController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

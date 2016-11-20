@@ -23,12 +23,12 @@ typedef NS_OPTIONS(uint16_t, KeyEventModifierFlags) {
     KeyEventModifierFlagControl     = 1 << 2,
     KeyEventModifierFlagOption      = 1 << 3,
     KeyEventModifierFlagCommand     = 1 << 4,
-    KeyEventModifierFlagFunction    = 1 << 5,
+    KeyEventModifierFlagFunction    = 1 << 5, // Keep this last
 };
 
 typedef struct {
     KeyEventType type;
-    uint16_t key;
+    KeyCode key;
     KeyEventModifierFlags modifiers;
 } KeyEvent;
 

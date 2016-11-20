@@ -15,7 +15,7 @@ typedef uint64_t Version;
 
 // Up this every time you want the iOS client require updated code
 // (so basically every versioned release or in case of protocol changes)
-static const Version kServerVersion = 1;
+static const Version kServerVersion = 2;
 
 static const uint32_t kProtocolFrameTypeServerMin = 1000;
 static const uint32_t kProtocolFrameTypeServerMax = 1999;
@@ -25,10 +25,11 @@ static const uint32_t kProtocolFrameTypeClientMax = 2999;
 typedef NS_ENUM(uint32_t, ProtocolFrameType) {
     ProtocolFrameTypeServerVersion              = 1000,
     ProtocolFrameTypeServerImage                = 1001,
-    ProtocolFrameTypeServerKeyboardLayout       = 1002,
+//    ProtocolFrameTypeServerKeyboardHtml         = 1002,
     ProtocolFrameTypeServerSystemKeyEvent       = 1003,
     ProtocolFrameTypeServerModeChange           = 1004,
     ProtocolFrameTypeServerAlignChange          = 1005,
+    ProtocolFrameTypeServerKeyboardLayout       = 1006,
 
     ProtocolFrameTypeClientTouchBarMouseEvent   = 2000,
     ProtocolFrameTypeClientKeyboardKeyEvent     = 2001,
