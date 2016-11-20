@@ -14,6 +14,8 @@
 
 @import AudioToolbox;
 
+static const NSTimeInterval kCapsLockDelay = 0.1;
+
 @interface Key : NSObject 
 @property (nonatomic, strong) CAShapeLayer *shapeLayer;
 @property (nonatomic, strong) CATextLayer *textLayer;
@@ -31,6 +33,7 @@
     NSArray *_keys;
     NSMutableDictionary *_keyForTouch;
     KeyEventModifierFlags _modifierFlags;
+    NSTimer *_capsLockTimer;
 }
 
 - (instancetype)init {
@@ -377,7 +380,22 @@
     }
 }
 
+- (void)delayedCapsLockDown:(NSTimer *)timer {
+    [self internalKeyPress:timer.userInfo isDown:YES];
+    _capsLockTimer = nil;
+}
+
 - (void)internalKeyPress:(Key *)key isDown:(BOOL)isDown {
+    if (key.keyCode == 0x39 /* kVK_CapsLock */) {
+        if (isDown && !(_modifierFlags & key.modifierFlag) && !_capsLockTimer) {
+            _capsLockTimer = [NSTimer scheduledTimerWithTimeInterval:kCapsLockDelay target:self selector:@selector(delayedCapsLockDown:) userInfo:key repeats:NO];
+            return;
+        } else if (!isDown && _capsLockTimer) {
+            [_capsLockTimer invalidate];
+            _capsLockTimer = nil;
+        }
+    }
+
     KeyEvent keyEvent;
     keyEvent.type = isDown ? KeyEventTypeKeyDown : KeyEventTypeKeyUp;
     keyEvent.key = key.keyCode;
