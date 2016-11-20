@@ -59,9 +59,8 @@
                                             <constraint firstAttribute="width" secondItem="PzG-Nm-vW5" secondAttribute="height" multiplier="217:6" id="G43-qT-eah"/>
                                         </constraints>
                                     </imageView>
-                                    <view alpha="0.40000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vhW-Up-5FT" userLabel="Touch Bar Area">
-                                        <rect key="frame" x="32.5" y="2" width="703" height="32"/>
-                                        <color key="backgroundColor" red="0.94936896319999997" green="0.23449720490000001" blue="0.25769166960000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vhW-Up-5FT" userLabel="Touch Bar Area">
+                                        <rect key="frame" x="5" y="2" width="758" height="32"/>
                                         <connections>
                                             <outletCollection property="gestureRecognizers" destination="uS1-Td-w9y" appends="YES" id="W6Q-vL-lhh"/>
                                         </connections>
@@ -69,7 +68,7 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="vhW-Up-5FT" firstAttribute="width" secondItem="PzG-Nm-vW5" secondAttribute="width" multiplier="1.02" id="0Uh-zz-u2b"/>
+                                    <constraint firstItem="vhW-Up-5FT" firstAttribute="width" secondItem="PzG-Nm-vW5" secondAttribute="width" multiplier="1.1" id="0Uh-zz-u2b"/>
                                     <constraint firstItem="vhW-Up-5FT" firstAttribute="height" secondItem="PzG-Nm-vW5" secondAttribute="height" multiplier="1.7" id="1qs-mp-GMT"/>
                                     <constraint firstItem="vhW-Up-5FT" firstAttribute="centerX" secondItem="PzG-Nm-vW5" secondAttribute="centerX" id="6WQ-bg-Uh2"/>
                                     <constraint firstItem="T7A-Jk-mkN" firstAttribute="top" secondItem="fdf-kx-9oY" secondAttribute="top" constant="1" placeholder="YES" id="DhY-2P-0LI"/>

@@ -184,6 +184,11 @@ static const NSTimeInterval kAnimationDuration = 0.3;
     // Hardcoded '2', because the touch bar is rendered @2x
     CGFloat scale = 2 * _touchBarView.frame.size.width / _touchBarView.image.size.width;
     CGPoint location = [recognizer locationInView:_touchBarView];
+    if (location.x < 0) {
+        location.x = 0;
+    } else if (location.x >= _touchBarView.bounds.size.width) {
+        location.x = _touchBarView.bounds.size.width - 1;
+    }
 
     event.x = location.x / scale;
     event.y = location.y / scale;
