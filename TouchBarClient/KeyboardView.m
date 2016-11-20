@@ -309,7 +309,7 @@
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     CGAffineTransform transform = CGAffineTransformInvert(_keysView.transform);
 
-    BOOL shouldPlayKeyboardClick = NO;
+    Key *clickSoundKey = nil;
 
     for (UITouch *touch in touches) {
         NSValue *touchValue = [NSValue valueWithNonretainedObject:touch];
@@ -317,7 +317,7 @@
         for (Key *key in _keys) {
             if (key.keyCode == 0xFF) continue;
             if (CGPathContainsPoint(key.shapeLayer.path, &transform, touchPoint, false)) {
-                shouldPlayKeyboardClick = YES;
+                clickSoundKey = key;
                 [_keyForTouch setObject:key forKey:touchValue];
                 [self internalKeyPress:key isDown:YES];
                 break;
@@ -325,8 +325,40 @@
         }
     }
     
-    if (shouldPlayKeyboardClick) {
-        AudioServicesPlaySystemSound(1104);
+    if (clickSoundKey) {
+        if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 10, .minorVersion = 0, .patchVersion = 0}]) {
+            if (clickSoundKey.modifierFlag) {
+                AudioServicesPlaySystemSound(1156);
+            } else {
+                switch (clickSoundKey.keyCode) {
+                    case 0x33: // kVK_Delete
+                        AudioServicesPlaySystemSound(1155);
+                        break;
+                    case 0x24: // kVK_Return
+                    case 0x30: // kVK_Tab
+                    case 0x35: // kVK_Escape
+                    case 0x47: // kVK_ANSI_KeypadClear
+                    case 0x4C: // kVK_ANSI_KeypadEnter
+                    case 0x66: // kVK_JIS_Eisu
+                    case 0x68: // kVK_JIS_Kana
+                    case 0x72: // kVK_Help
+                    case 0x73: // kVK_Home
+                    case 0x74: // kVK_PageUp
+                    case 0x77: // kVK_End
+                    case 0x79: // kVK_PageDown
+                    case 0x7B: // kVK_LeftArrow
+                    case 0x7C: // kVK_RightArrow
+                    case 0x7D: // kVK_DownArrow
+                    case 0x7E: // kVK_UpArrow
+                        AudioServicesPlaySystemSound(1156);
+                        break;
+                    default:
+                        AudioServicesPlaySystemSound(1123);
+                }
+            }
+        } else {
+            AudioServicesPlaySystemSound(1104);
+        }
     }
 }
 
