@@ -137,6 +137,12 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
     _statusItem.highlightMode = YES;
     _statusItem.image = [NSImage imageNamed:@"NSSlideshowTemplate"];
     [self stopStreaming];
+
+    [[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(didChangeInputSource) name:(NSString *)kTISNotifySelectedKeyboardInputSourceChanged object:nil suspensionBehavior:NSNotificationSuspensionBehaviorDeliverImmediately];
+}
+
+- (void)didChangeInputSource {
+    [self sendKeyboardLayoutToDevice:nil];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
