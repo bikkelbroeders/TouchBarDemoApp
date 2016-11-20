@@ -317,9 +317,11 @@
         for (Key *key in _keys) {
             if (key.keyCode == 0xFF) continue;
             if (CGPathContainsPoint(key.shapeLayer.path, &transform, touchPoint, false)) {
-                clickSoundKey = key;
+                if ([_keyForTouch allKeysForObject:key].count == 0) {
+                    clickSoundKey = key;
+                    [self internalKeyPress:key isDown:YES];
+                }
                 [_keyForTouch setObject:key forKey:touchValue];
-                [self internalKeyPress:key isDown:YES];
                 break;
             }
         }
@@ -368,7 +370,9 @@
         Key *key = _keyForTouch[touchValue];
         if (key) {
             [_keyForTouch removeObjectForKey:touchValue];
-            [self internalKeyPress:key isDown:NO];
+            if ([_keyForTouch allKeysForObject:key].count == 0) {
+                [self internalKeyPress:key isDown:NO];
+            }
         }
     }
 }
