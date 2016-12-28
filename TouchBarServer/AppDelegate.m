@@ -255,7 +255,8 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
 }
 
 - (void)didPressModifierKey {
-    [self toggleTouchBarWindow];
+    if (self.screenEnable == YES)
+        [self toggleTouchBarWindow];
 }
 
 - (NSMutableDictionary *)keyCaptionsForCurrentInputSource {
