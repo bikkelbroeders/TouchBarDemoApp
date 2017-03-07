@@ -29,7 +29,7 @@
         
         self.movable = NO;
         self.acceptsMouseMovedEvents = YES;
-        self.movableByWindowBackground = NO;
+        self.movableByWindowBackground = YES;
         self.level = CGWindowLevelForKey(kCGAssistiveTechHighWindowLevelKey);
         self.collectionBehavior = (NSWindowCollectionBehaviorCanJoinAllSpaces | NSWindowCollectionBehaviorStationary | NSWindowCollectionBehaviorIgnoresCycle | NSWindowCollectionBehaviorFullScreenDisallowsTiling);
         self.backgroundColor = [NSColor blackColor];
