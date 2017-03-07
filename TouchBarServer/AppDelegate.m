@@ -25,10 +25,17 @@
 extern CGDisplayStreamRef SLSDFRDisplayStreamCreate(void *, dispatch_queue_t, CGDisplayStreamFrameAvailableHandler);
 extern BOOL DFRSetStatus(int);
 extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p);
+BOOL centerornot;
+BOOL rightornot;
+BOOL leftornot;
+
 
 static NSString * const kUserDefaultsKeyScreenEnable    = @"ScreenEnable";
 static NSString * const kUserDefaultsKeyScreenToggleKey = @"ScreenToggleKey";
 static NSString * const kUserDefaultsKeyRemoteEnable    = @"RemoteEnable";
+static NSString * const kUserDefaultsKeyLeftEnable    = @"LeftEnable";
+static NSString * const kUserDefaultsKeyCenterEnable    = @"CenterEnable";
+static NSString * const kUserDefaultsKeyRightEnable    = @"RightEnable";
 static NSString * const kUserDefaultsKeyRemoteMode      = @"RemoteMode";
 static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
 
@@ -43,6 +50,9 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
 @property (nonatomic, assign) BOOL screenEnable;
 @property (nonatomic, assign) ModifierKey screenToggleKey;
 @property (nonatomic, assign) BOOL remoteEnable;
+@property (nonatomic, assign) BOOL leftEnable;
+@property (nonatomic, assign) BOOL centerEnable;
+@property (nonatomic, assign) BOOL rightEnable;
 @property (nonatomic, assign) OperatingMode remoteMode;
 @property (nonatomic, assign) Alignment remoteAlign;
 
@@ -114,7 +124,9 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
                                                               kUserDefaultsKeyScreenEnable: @YES,
                                                               kUserDefaultsKeyScreenToggleKey: @(ModifierKeyFn),
                                                               kUserDefaultsKeyRemoteEnable: @YES,
-                                                              kUserDefaultsKeyRemoteMode: @(OperatingModeDemo1),
+                                                              kUserDefaultsKeyLeftEnable: @YES,
+                                                              kUserDefaultsKeyCenterEnable: @YES,
+                                                              kUserDefaultsKeyRightEnable: @YES,kUserDefaultsKeyRemoteMode: @(OperatingModeDemo1),
                                                               kUserDefaultsKeyRemoteAlign: @(AlignmentBottom),
                                                               }];
 
@@ -126,6 +138,15 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
     
     _remoteEnable = NO;
     self.remoteEnable = [[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKeyRemoteEnable];
+    
+    _leftEnable = NO;
+    self.leftEnable = [[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKeyLeftEnable];
+    
+    _centerEnable = NO;
+    self.centerEnable = [[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKeyCenterEnable];
+    
+    _rightEnable = NO;
+    self.rightEnable = [[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKeyRightEnable];
     
     _remoteMode = -1;
     self.remoteMode = [[NSUserDefaults standardUserDefaults] integerForKey:kUserDefaultsKeyRemoteMode];
@@ -202,6 +223,91 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
     }
 }
 
+- (void)setLeftEnable:(BOOL)leftEnable {
+    if (_leftEnable != leftEnable) {
+        _leftEnable = leftEnable;
+        [[NSUserDefaults standardUserDefaults] setObject:@(_centerEnable) forKey:kUserDefaultsKeyCenterEnable];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        //_screenSubMenuItem.state = _leftEnable ? 1 : 0;
+        //[self disableCenterTick];
+        //[self disableRightTick];
+        for (NSMenuItem *menuItem in _screenSubMenuItem.submenu.itemArray) {
+            if (menuItem.action != @selector(changeLeftEnable:)) continue;
+            menuItem.state = _leftEnable ? 1 : 0;
+        }
+        
+        if (_leftEnable) {
+            leftornot = YES;
+        } else {
+            leftornot = NO;
+        }
+    }
+}
+- (void)setCenterEnable:(BOOL)centerEnable {
+    if (_centerEnable != centerEnable) {
+        _centerEnable = centerEnable;
+        [[NSUserDefaults standardUserDefaults] setObject:@(_centerEnable) forKey:kUserDefaultsKeyCenterEnable];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        /*if (rightornot == YES) {
+            centerornot = YES;
+        }*/
+        /*NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"Error: could not detect Touch Bar support"];
+        [alert setInformativeText:[NSString stringWithFormat:@"We need at least macOS 10.12.1 (Build 16B2657).\n\nYou have: %@.\n", [NSProcessInfo processInfo].operatingSystemVersionString]];
+        [alert addButtonWithTitle:@"Exit"];
+        [alert addButtonWithTitle:@"Get macOS Update"];
+        NSModalResponse response = [alert runModal];
+        if(response == NSAlertSecondButtonReturn) {
+            [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://support.apple.com/kb/dl1897"]];
+        }
+        
+        [NSApp terminate:nil];*/
+        //_screenSubMenuItem.state = _centerEnable ? 1 : 0;
+        /*for (NSMenuItem *menuItem in _screenSubMenuItem.submenu.itemArray) {
+            if (menuItem.action != @selector(changeCenterEnable:)) continue;
+            menuItem.state = 0;
+        }*/
+        
+        for (NSMenuItem *menuItem in _screenSubMenuItem.submenu.itemArray) {
+            if (menuItem.action != @selector(changeCenterEnable:)) continue;
+            menuItem.state = _centerEnable ? 1 : 0;
+        }
+        
+        if (_centerEnable) {
+            centerornot = YES;
+        } else {
+            centerornot = NO;
+        }
+    }
+}
+
+- (void)setRightEnable:(BOOL)rightEnable {
+    if (_rightEnable != rightEnable) {
+        _rightEnable = rightEnable;
+        [[NSUserDefaults standardUserDefaults] setObject:@(_rightEnable) forKey:kUserDefaultsKeyRightEnable];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        //_screenSubMenuItem.state = _rightEnable ? 1 : 0;
+        for (NSMenuItem *menuItem in _screenSubMenuItem.submenu.itemArray) {
+            if (menuItem.action != @selector(changeRightEnable:)) continue;
+            menuItem.state = _rightEnable ? 1 : 0;
+        }
+        
+        if (_rightEnable) {
+            rightornot = YES;
+        } else {
+            rightornot = NO;
+        }
+    }
+}
+
+- (void)disableRightTick:(BOOL)rightEnable {
+    for (NSMenuItem *menuItem in _screenSubMenuItem.submenu.itemArray) {
+        menuItem.state = 0;
+    }
+}
+
 - (void)setRemoteMode:(OperatingMode)remoteMode {
     if (_remoteMode != remoteMode) {
         _remoteMode = remoteMode;
@@ -244,6 +350,21 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
 
 - (IBAction)changeRemoteEnable:(NSMenuItem *)sender {
     self.remoteEnable = (sender.state == 0);
+}
+
+- (IBAction)changeLeftEnable:(NSMenuItem *)sender {
+    self.leftEnable = (sender.state == 0);
+    //self.screenEnable = (sender.state == 0);
+}
+
+- (IBAction)changeCenterEnable:(NSMenuItem *)sender {
+    self.centerEnable = (sender.state == 0);
+    //self.screenEnable = (sender.state == 0);
+}
+
+- (IBAction)changeRightEnable:(NSMenuItem *)sender {
+    self.rightEnable = (sender.state == 0);
+    //self.screenEnable = (sender.state == 0);
 }
 
 - (IBAction)changeRemoteMode:(NSMenuItem *)sender {
@@ -327,7 +448,33 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
                 [_touchBarWindow setIsVisible:NO];
         }];
     } else {
-        [_touchBarWindow setFrameOrigin:self.mouseTouchOrigin];
+        
+        
+        if (centerornot == YES) {
+            NSRect e = [[NSScreen mainScreen] frame];
+            int width = (int)e.size.width - 1095;
+            width = width/2;
+            NSPoint centerBottomPoint = CGPointMake(width, 0);
+            [_touchBarWindow setFrameOrigin:centerBottomPoint];
+        } else {
+            if (rightornot == YES) {
+                NSRect e = [[NSScreen mainScreen] frame];
+                int width = (int)e.size.width - 10;
+                width = width/2;
+                NSPoint centerBottomPoint = CGPointMake(width, 0);
+                [_touchBarWindow setFrameOrigin:centerBottomPoint];
+            } else {
+                if (leftornot == YES) {
+                    NSRect e = [[NSScreen mainScreen] frame];
+                    int width = (int)e.size.width - 10950;
+                    width = width/2;
+                    NSPoint centerBottomPoint = CGPointMake(width, 0);
+                    [_touchBarWindow setFrameOrigin:centerBottomPoint];
+                } else {
+                    [_touchBarWindow setFrameOrigin:self.mouseTouchOrigin];
+                }
+            }
+        }
         
         _touchBarWindow.alphaValue = 1.0;
         [_touchBarWindow setIsVisible:YES];

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2657" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16E163f" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -64,6 +64,25 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="changeScreenToggleKey:" target="Voe-Tx-rLC" id="k0B-ny-Zcv"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="Pz3-Ls-Eon"/>
+                            <menuItem title="Align Left" id="vsh-pW-lUm">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeLeftEnable:" target="Voe-Tx-rLC" id="fEb-ay-Soz"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Align Center" id="4eP-kY-XkL">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeCenterEnable:" target="Voe-Tx-rLC" id="8me-V2-rHg"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Align Right" id="y1K-wX-4pS">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeRightEnable:" target="Voe-Tx-rLC" id="OpE-wf-Ui7"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -159,6 +178,7 @@
                     </connections>
                 </menuItem>
             </items>
+            <point key="canvasLocation" x="139.5" y="165.5"/>
         </menu>
     </objects>
 </document>
