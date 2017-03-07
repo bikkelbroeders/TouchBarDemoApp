@@ -224,10 +224,7 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
         _ScreenFixedLeft = ScreenFixedLeft;
         [[NSUserDefaults standardUserDefaults] setObject:@(_ScreenFixedCenter) forKey:kUserDefaultsKeyScreenFixedCenter];
         [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        //_screenSubMenuItem.state = _ScreenFixedLeft ? 1 : 0;
-        //[self disableCenterTick];
-        //[self disableRightTick];
+
         for (NSMenuItem *menuItem in _screenSubMenuItem.submenu.itemArray) {
             if (menuItem.action != @selector(changeScreenFixedLeft:)) continue;
             menuItem.state = _ScreenFixedLeft ? 1 : 0;
@@ -254,7 +251,6 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
         [[NSUserDefaults standardUserDefaults] setObject:@(_ScreenFixedRight) forKey:kUserDefaultsKeyScreenFixedRight];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
-        //_screenSubMenuItem.state = _ScreenFixedRight ? 1 : 0;
         for (NSMenuItem *menuItem in _screenSubMenuItem.submenu.itemArray) {
             if (menuItem.action != @selector(changeScreenFixedRight:)) continue;
             menuItem.state = _ScreenFixedRight ? 1 : 0;
@@ -315,17 +311,14 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
 
 - (IBAction)changeScreenFixedLeft:(NSMenuItem *)sender {
     self.ScreenFixedLeft = (sender.state == 0);
-    //self.screenEnable = (sender.state == 0);
 }
 
 - (IBAction)changeScreenFixedCenter:(NSMenuItem *)sender {
     self.ScreenFixedCenter = (sender.state == 0);
-    //self.screenEnable = (sender.state == 0);
 }
 
 - (IBAction)changeScreenFixedRight:(NSMenuItem *)sender {
     self.ScreenFixedRight = (sender.state == 0);
-    //self.screenEnable = (sender.state == 0);
 }
 
 - (IBAction)changeRemoteMode:(NSMenuItem *)sender {
