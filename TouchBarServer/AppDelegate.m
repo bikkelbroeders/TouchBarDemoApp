@@ -29,6 +29,9 @@ extern BOOL DFRFoundationPostEventWithMouseActivity(NSEventType type, NSPoint p)
 static NSString * const kUserDefaultsKeyScreenEnable    = @"ScreenEnable";
 static NSString * const kUserDefaultsKeyScreenToggleKey = @"ScreenToggleKey";
 static NSString * const kUserDefaultsKeyRemoteEnable    = @"RemoteEnable";
+static NSString * const kUserDefaultsKeyScreenFixedLeft    = @"ScreenFixedLeft";
+static NSString * const kUserDefaultsKeyScreenFixedCenter    = @"ScreenFixedCenter";
+static NSString * const kUserDefaultsKeyScreenFixedRight    = @"ScreenFixedRight";
 static NSString * const kUserDefaultsKeyRemoteMode      = @"RemoteMode";
 static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
 
@@ -43,6 +46,9 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
 @property (nonatomic, assign) BOOL screenEnable;
 @property (nonatomic, assign) ModifierKey screenToggleKey;
 @property (nonatomic, assign) BOOL remoteEnable;
+@property (nonatomic, assign) BOOL ScreenFixedLeft;
+@property (nonatomic, assign) BOOL ScreenFixedCenter;
+@property (nonatomic, assign) BOOL ScreenFixedRight;
 @property (nonatomic, assign) OperatingMode remoteMode;
 @property (nonatomic, assign) Alignment remoteAlign;
 
@@ -114,7 +120,9 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
                                                               kUserDefaultsKeyScreenEnable: @YES,
                                                               kUserDefaultsKeyScreenToggleKey: @(ModifierKeyFn),
                                                               kUserDefaultsKeyRemoteEnable: @YES,
-                                                              kUserDefaultsKeyRemoteMode: @(OperatingModeDemo1),
+                                                              kUserDefaultsKeyScreenFixedLeft: @YES,
+                                                              kUserDefaultsKeyScreenFixedCenter: @YES,
+                                                              kUserDefaultsKeyScreenFixedRight: @YES,kUserDefaultsKeyRemoteMode: @(OperatingModeDemo1),
                                                               kUserDefaultsKeyRemoteAlign: @(AlignmentBottom),
                                                               }];
 
@@ -126,6 +134,15 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
     
     _remoteEnable = NO;
     self.remoteEnable = [[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKeyRemoteEnable];
+    
+    _ScreenFixedLeft = NO;
+    self.ScreenFixedLeft = [[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKeyScreenFixedLeft];
+    
+    _ScreenFixedCenter = NO;
+    self.ScreenFixedCenter = [[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKeyScreenFixedCenter];
+    
+    _ScreenFixedRight = NO;
+    self.ScreenFixedRight = [[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKeyScreenFixedRight];
     
     _remoteMode = -1;
     self.remoteMode = [[NSUserDefaults standardUserDefaults] integerForKey:kUserDefaultsKeyRemoteMode];
@@ -202,6 +219,52 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
     }
 }
 
+- (void)setScreenFixedLeft:(BOOL)ScreenFixedLeft {
+    if (_ScreenFixedLeft != ScreenFixedLeft) {
+        _ScreenFixedLeft = ScreenFixedLeft;
+        [[NSUserDefaults standardUserDefaults] setObject:@(_ScreenFixedCenter) forKey:kUserDefaultsKeyScreenFixedCenter];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+
+        for (NSMenuItem *menuItem in _screenSubMenuItem.submenu.itemArray) {
+            if (menuItem.action != @selector(changeScreenFixedLeft:)) continue;
+            menuItem.state = _ScreenFixedLeft ? 1 : 0;
+        }
+    }
+}
+- (void)setScreenFixedCenter:(BOOL)ScreenFixedCenter {
+    if (_ScreenFixedCenter != ScreenFixedCenter) {
+        _ScreenFixedCenter = ScreenFixedCenter;
+        [[NSUserDefaults standardUserDefaults] setObject:@(_ScreenFixedCenter) forKey:kUserDefaultsKeyScreenFixedCenter];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        for (NSMenuItem *menuItem in _screenSubMenuItem.submenu.itemArray) {
+            if (menuItem.action != @selector(changeScreenFixedCenter:)) continue;
+            menuItem.state = _ScreenFixedCenter ? 1 : 0;
+        }
+        
+    }
+}
+
+- (void)setScreenFixedRight:(BOOL)ScreenFixedRight {
+    if (_ScreenFixedRight != ScreenFixedRight) {
+        _ScreenFixedRight = ScreenFixedRight;
+        [[NSUserDefaults standardUserDefaults] setObject:@(_ScreenFixedRight) forKey:kUserDefaultsKeyScreenFixedRight];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        for (NSMenuItem *menuItem in _screenSubMenuItem.submenu.itemArray) {
+            if (menuItem.action != @selector(changeScreenFixedRight:)) continue;
+            menuItem.state = _ScreenFixedRight ? 1 : 0;
+        }
+        
+    }
+}
+
+- (void)disableRightTick:(BOOL)ScreenFixedRight {
+    for (NSMenuItem *menuItem in _screenSubMenuItem.submenu.itemArray) {
+        menuItem.state = 0;
+    }
+}
+
 - (void)setRemoteMode:(OperatingMode)remoteMode {
     if (_remoteMode != remoteMode) {
         _remoteMode = remoteMode;
@@ -244,6 +307,18 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
 
 - (IBAction)changeRemoteEnable:(NSMenuItem *)sender {
     self.remoteEnable = (sender.state == 0);
+}
+
+- (IBAction)changeScreenFixedLeft:(NSMenuItem *)sender {
+    self.ScreenFixedLeft = (sender.state == 0);
+}
+
+- (IBAction)changeScreenFixedCenter:(NSMenuItem *)sender {
+    self.ScreenFixedCenter = (sender.state == 0);
+}
+
+- (IBAction)changeScreenFixedRight:(NSMenuItem *)sender {
+    self.ScreenFixedRight = (sender.state == 0);
 }
 
 - (IBAction)changeRemoteMode:(NSMenuItem *)sender {
@@ -327,7 +402,33 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
                 [_touchBarWindow setIsVisible:NO];
         }];
     } else {
-        [_touchBarWindow setFrameOrigin:self.mouseTouchOrigin];
+        
+        
+        if (_ScreenFixedCenter == YES) {
+            NSRect e = [[NSScreen mainScreen] frame];
+            int width = (int)e.size.width - 1095;
+            width = width/2;
+            NSPoint centerBottomPoint = CGPointMake(width, 0);
+            [_touchBarWindow setFrameOrigin:centerBottomPoint];
+        } else {
+            if (_ScreenFixedLeft == YES) {
+                NSRect e = [[NSScreen mainScreen] frame];
+                int width = (int)e.size.width - 10950;
+                width = width/2;
+                NSPoint centerBottomPoint = CGPointMake(width, 0);
+                [_touchBarWindow setFrameOrigin:centerBottomPoint];
+            } else {
+                if (_ScreenFixedRight == YES) {
+                    NSRect e = [[NSScreen mainScreen] frame];
+                    int width = (int)e.size.width - 10;
+                    width = width/2;
+                    NSPoint centerBottomPoint = CGPointMake(width, 0);
+                    [_touchBarWindow setFrameOrigin:centerBottomPoint];
+                } else {
+                    [_touchBarWindow setFrameOrigin:self.mouseTouchOrigin];
+                }
+            }
+        }
         
         _touchBarWindow.alphaValue = 1.0;
         [_touchBarWindow setIsVisible:YES];
