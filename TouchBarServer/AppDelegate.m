@@ -232,12 +232,6 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
             if (menuItem.action != @selector(changeScreenFixedLeft:)) continue;
             menuItem.state = _ScreenFixedLeft ? 1 : 0;
         }
-        
-        if (_ScreenFixedLeft) {
-            leftornot = YES;
-        } else {
-            leftornot = NO;
-        }
     }
 }
 - (void)setScreenFixedCenter:(BOOL)ScreenFixedCenter {
@@ -266,11 +260,6 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
             menuItem.state = _ScreenFixedRight ? 1 : 0;
         }
         
-        if (_ScreenFixedRight) {
-            rightornot = YES;
-        } else {
-            rightornot = NO;
-        }
     }
 }
 
