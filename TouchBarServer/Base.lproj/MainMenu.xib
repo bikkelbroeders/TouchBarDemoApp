@@ -67,10 +67,22 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="Pz3-Ls-Eon"/>
+                            <menuItem title="Align Left" id="vsh-pW-lUm">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeLeftEnable:" target="Voe-Tx-rLC" id="fEb-ay-Soz"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Align Center" id="4eP-kY-XkL">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="changeCenterEnable:" target="Voe-Tx-rLC" id="8me-V2-rHg"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Align Right" id="y1K-wX-4pS">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeRightEnable:" target="Voe-Tx-rLC" id="OpE-wf-Ui7"/>
                                 </connections>
                             </menuItem>
                         </items>
