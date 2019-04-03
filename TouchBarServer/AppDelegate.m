@@ -447,6 +447,7 @@ static NSString * const kUserDefaultsKeyRemoteAlign     = @"RemoteAlign";
                                                                                              IOSurfaceRef frameSurface,
                                                                                              CGDisplayStreamUpdateRef updateRef) {
         if (status != kCGDisplayStreamFrameStatusFrameComplete) return;
+        if (frameSurface == nil) return;
         
         IOSurfaceLock(frameSurface, kIOSurfaceLockReadOnly, nil);
         CIImage *image = [CIImage imageWithIOSurface:frameSurface];
